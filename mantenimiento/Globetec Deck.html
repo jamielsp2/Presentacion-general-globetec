@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>GLOBETEC · Mantenimiento WordPress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="deck-stage.js"></script>
+<style>
+  :root {
+    --bg: #05070d;
+    --bg-2: #0a0f1f;
+    --bg-3: #11192d;
+    --ink: #f5f7ff;
+    --ink-dim: #a6b0c8;
+    --ink-mute: #6c7791;
+    --blue: #2e6bff;
+    --blue-2: #5b8bff;
+    --blue-elec: #4d8cff;
+    --cyan: #7cd4ff;
+    --red: #ff5c7a;
+    --amber: #ffb547;
+    --green: #4ade80;
+    --line: rgba(255,255,255,0.08);
+    --line-2: rgba(255,255,255,0.14);
+    --grid: rgba(91,139,255,0.08);
+  }
+  html, body { margin:0; background:#000; color:var(--ink); font-family:'Inter', system-ui, sans-serif; }
+  deck-stage { background:#000; }
+  deck-stage > section {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 22px;
+    line-height: 1.45;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Shared */
+  .display { font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.02em; }
+  .mono { font-family:'JetBrains Mono', monospace; }
+  .eyebrow { font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--blue-2); letter-spacing:0.18em; text-transform:uppercase; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid var(--line-2); border-radius:999px; font-size:13px; color:var(--ink-dim); background:rgba(255,255,255,0.02); }
+  .chip .dot { width:6px; height:6px; border-radius:50%; background:var(--blue-elec); box-shadow:0 0 12px var(--blue-elec); }
+  .btn { display:inline-flex; align-items:center; gap:10px; padding:14px 22px; border-radius:999px; font-weight:600; font-size:16px; }
+  .btn-primary { background: linear-gradient(135deg, #2e6bff 0%, #5b8bff 100%); color:#fff; box-shadow:0 12px 40px -10px rgba(46,107,255,0.6); }
+  .btn-ghost { border:1px solid var(--line-2); color:var(--ink); }
+
+  .bg-grid::before {
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 80%);
+    pointer-events:none;
+  }
+  .bg-glow::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 600px 400px at 15% 20%, rgba(46,107,255,0.35), transparent 60%),
+      radial-gradient(ellipse 500px 400px at 90% 90%, rgba(91,139,255,0.18), transparent 70%);
+  }
+  .bg-red::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 700px 500px at 80% 20%, rgba(255,92,122,0.18), transparent 60%),
+      radial-gradient(ellipse 500px 400px at 10% 90%, rgba(46,107,255,0.18), transparent 70%);
+  }
+
+  .chrome { position:absolute; left:64px; right:64px; display:flex; align-items:center; justify-content:space-between; z-index:5; }
+  .chrome.top { top:48px; }
+  .logo { display:flex; align-items:center; gap:12px; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:18px; letter-spacing:0.02em; }
+  .logo-mark { width:28px; height:28px; }
+  .logo-mark svg { width:100%; height:100%; display:block; }
+
+  h1.title { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:120px; line-height:0.95; letter-spacing:-0.04em; margin:0; }
+  h2.title { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:88px; line-height:0.98; letter-spacing:-0.035em; margin:0; }
+  h3.title { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:56px; line-height:1.0; letter-spacing:-0.03em; margin:0; }
+  .grad-text { background: linear-gradient(120deg, #ffffff 0%, #7cd4ff 50%, #5b8bff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .red-text { background: linear-gradient(120deg, #ffffff 0%, #ffb547 50%, #ff5c7a 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  .slide { width:100%; height:100%; padding:120px 120px 100px; box-sizing:border-box; position:relative; }
+  .card { background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border:1px solid var(--line-2); border-radius:24px; padding:32px; position:relative; overflow:hidden; }
+  .card .num { font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--blue-2); }
+
+  .ico { width:64px; height:64px; border-radius:18px; display:grid; place-items:center; background:linear-gradient(135deg, rgba(46,107,255,0.22), rgba(91,139,255,0.08)); border:1px solid rgba(91,139,255,0.35); }
+  .ico svg { width:30px; height:30px; stroke:var(--cyan); fill:none; stroke-width:1.6; }
+  .ico.danger { background:linear-gradient(135deg, rgba(255,92,122,0.22), rgba(255,181,71,0.08)); border-color: rgba(255,92,122,0.4); }
+  .ico.danger svg { stroke: var(--red); }
+
+  .stat-n { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:88px; line-height:0.9; letter-spacing:-0.04em; }
+  .stat-l { color:var(--ink-dim); font-size:15px; margin-top:8px; }
+
+  .ph { background: repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 10px, rgba(255,255,255,0.02) 10px 20px);
+    border:1px dashed var(--line-2); border-radius:14px; display:grid; place-items:center; color:var(--ink-mute); font-family:'JetBrains Mono', monospace; font-size:12px; }
+
+  /* Story slides */
+  .story-stage { position:absolute; inset:0; padding:120px 120px 100px; display:grid; grid-template-columns: 1fr 1fr; gap:64px; }
+  .story-chapter { display:flex; flex-direction:column; gap:14px; align-self:center; }
+  .story-num { font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--blue-2); letter-spacing:0.18em; }
+  .story-h { font-family:'Space Grotesk'; font-weight:600; font-size:80px; line-height:1; letter-spacing:-0.035em; margin:0; }
+  .story-p { font-size:21px; line-height:1.55; color:var(--ink-dim); max-width:560px; }
+  .story-p b { color:var(--ink); }
+
+  .timeline { position:absolute; bottom:64px; left:120px; right:120px; display:flex; align-items:center; gap:14px; }
+  .tl-step { flex:1; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; position:relative; overflow:hidden; }
+  .tl-step.done::after, .tl-step.active::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, #2e6bff, #7cd4ff); }
+  .tl-step.active::after { background:linear-gradient(90deg, #2e6bff, #ff5c7a); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.55 } }
+  .tl-label { font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-mute); letter-spacing:0.1em; min-width:90px; text-align:right; }
+
+  /* Browser mock variants */
+  .browser { background:#0b1430; border:1px solid var(--line-2); border-radius:14px; overflow:hidden; }
+  .browser .bar { display:flex; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--line); }
+  .browser .bar .d { width:10px; height:10px; border-radius:50%; }
+  .browser .url { flex:1; margin-left:10px; padding:6px 12px; background:rgba(255,255,255,0.06); border-radius:6px; font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--ink-mute); }
+  .browser .body { padding:20px; min-height:200px; position:relative; }
+
+  /* Compliance */
+  .comp-card { display:flex; flex-direction:column; gap:14px; padding:26px; border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border:1px solid var(--line-2); position:relative; overflow:hidden; }
+  .comp-card .crest { position:absolute; right:-30px; top:-30px; width:140px; height:140px; opacity:0.06; }
+  .comp-badge { display:inline-flex; align-items:center; gap:8px; padding:5px 10px; background:rgba(91,139,255,0.18); border:1px solid rgba(91,139,255,0.4); border-radius:6px; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--cyan); width:fit-content; letter-spacing:0.06em; }
+
+  /* Plans */
+  .plan { display:flex; flex-direction:column; gap:18px; padding:32px; border-radius:22px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border:1px solid var(--line-2); position:relative; }
+  .plan.featured { background: linear-gradient(180deg, rgba(46,107,255,0.22), rgba(91,139,255,0.04)); border-color: rgba(91,139,255,0.5); }
+  .plan-label { font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--blue-2); letter-spacing:0.14em; }
+  .plan-price { font-family:'Space Grotesk'; font-weight:600; font-size:64px; line-height:1; letter-spacing:-0.03em; }
+  .plan-price small { font-size:18px; color:var(--ink-dim); font-weight:500; }
+  .plan ul { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:9px; }
+  .plan li { display:grid; grid-template-columns: 18px 1fr; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-dim); line-height:1.45; }
+  .plan li::before { content:""; width:16px; height:16px; border-radius:50%; background:rgba(91,139,255,0.18); border:1px solid var(--blue-2); margin-top:2px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 8l3 3 5-6' stroke='%237cd4ff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat:no-repeat; background-position:center; }
+  .plan-badge { position:absolute; top:-12px; right:24px; background:linear-gradient(135deg,#2e6bff,#5b8bff); color:#fff; font-size:12px; font-weight:600; padding:6px 14px; border-radius:999px; }
+
+  /* ROI calculator controls */
+  .roi-calc input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:4px; background:rgba(255,255,255,0.12); border-radius:2px; margin-top:6px; outline:none; cursor:pointer; }
+  .roi-calc input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:#5b8bff; cursor:pointer; box-shadow:0 0 0 4px rgba(91,139,255,0.18); border:none; }
+  .roi-calc input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:#5b8bff; cursor:pointer; border:none; box-shadow:0 0 0 4px rgba(91,139,255,0.18); }
+  .roi-calc .tp { background:rgba(255,255,255,0.04); border:1px solid var(--line-2); color:var(--ink-dim); padding:10px 16px; border-radius:14px; font-size:13px; cursor:pointer; font-family:'Inter', sans-serif; transition:all .15s ease; text-align:left; }
+  .roi-calc .tp .pp { font-family:'Space Grotesk'; font-size:18px; font-weight:600; color:var(--ink); display:block; }
+  .roi-calc .tp .pl { font-size:11px; color:var(--ink-mute); letter-spacing:0.06em; text-transform:uppercase; }
+  .roi-calc .tp:hover { color:var(--ink); border-color:rgba(91,139,255,0.4); }
+  .roi-calc .tp.active { background:linear-gradient(135deg, rgba(46,107,255,0.3), rgba(91,139,255,0.12)); border-color:rgba(91,139,255,0.55); box-shadow:0 4px 16px -6px rgba(46,107,255,0.5); }
+  .roi-calc .bd { padding:8px 10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.05); border-radius:8px; position:relative; cursor:help; }
+  .roi-calc .bd-l { font-size:10px; color:var(--ink-mute); letter-spacing:0.04em; }
+  .roi-calc .bd-v { color:var(--ink); font-size:14px; font-weight:600; margin-top:2px; }
+  .roi-calc .bd[data-src]:hover::after {
+    content: attr(data-src);
+    position:absolute; bottom:calc(100% + 8px); left:0; right:0;
+    background:#0a0f1f; color:#f5f7ff; border:1px solid rgba(91,139,255,0.4);
+    padding:8px 10px; border-radius:8px; font-size:11px; line-height:1.4;
+    z-index:10; font-family:'Inter', sans-serif; font-weight:400;
+    box-shadow:0 8px 24px -6px rgba(0,0,0,0.6); white-space:normal;
+  }
+  .src { display:inline-block; padding:2px 8px; background:rgba(91,139,255,0.14); border:1px solid rgba(91,139,255,0.3); border-radius:4px; font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--cyan); letter-spacing:0.02em; }
+
+  /* Comparison rows */
+  .vs-row { display:grid; grid-template-columns: 1.7fr 1fr 1fr; align-items:center; padding:14px 24px; border-bottom:1px solid var(--line); }
+  .vs-row:last-child { border-bottom:none; }
+  .vs-row.featured { background:linear-gradient(90deg, rgba(46,107,255,0.08), rgba(91,139,255,0.02)); }
+  .vs-feat { display:flex; align-items:center; gap:14px; }
+  .vs-ico { width:40px; height:40px; min-width:40px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg, rgba(46,107,255,0.22), rgba(91,139,255,0.08)); border:1px solid rgba(91,139,255,0.35); }
+  .vs-ico svg { width:20px; height:20px; stroke:var(--cyan); fill:none; stroke-width:1.6; }
+  .vs-t { font-weight:600; font-size:15px; }
+  .vs-d { font-size:12.5px; color:var(--ink-dim); margin-top:2px; line-height:1.4; }
+  .vs-us { text-align:center; font-family:'Space Grotesk'; font-weight:600; font-size:15px; color:var(--cyan); padding:8px 10px; background:rgba(124,212,255,0.08); border:1px solid rgba(124,212,255,0.25); border-radius:8px; }
+  .vs-them { text-align:center; color:var(--ink-mute); font-size:13px; }
+  .vs-them .x { color:var(--red); font-weight:700; margin-right:6px; }
+  #present-toolbar { position:fixed; bottom:16px; right:16px; z-index:9999; display:flex; gap:8px; background:rgba(10,15,31,0.88); backdrop-filter:blur(12px); border:1px solid rgba(91,139,255,0.3); border-radius:999px; padding:6px; box-shadow:0 12px 40px -10px rgba(0,0,0,0.6); font-family:'Inter', sans-serif; transition:opacity .25s; }
+  #present-toolbar.idle { opacity:0.15; }
+  #present-toolbar:hover { opacity:1; }
+  #present-toolbar button { background:transparent; border:none; color:#f5f7ff; padding:8px 14px; border-radius:999px; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-family:inherit; }
+  #present-toolbar button:hover { background:rgba(91,139,255,0.18); }
+  #present-toolbar button.active { background:linear-gradient(135deg,#2e6bff,#5b8bff); }
+  #present-toolbar svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  @media print { #present-toolbar { display:none !important; } }
+</style>
+</head>
+<body>
+
+<script type="application/json" id="speaker-notes">[]</script>
+
+<deck-stage>
+
+<!-- ============ 01 COVER ============ -->
+<section data-screen-label="01 Cover">
+  <div class="slide bg-grid bg-glow" style="display:flex; flex-direction:column; justify-content:space-between;">
+    <div class="chrome top" style="position:static; padding:0;">
+      <div class="logo">
+        <span class="logo-mark"><svg viewBox="0 0 32 32"><defs><linearGradient id="lg1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#2e6bff"/></linearGradient></defs><circle cx="16" cy="16" r="14" fill="none" stroke="url(#lg1)" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="url(#lg1)" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="url(#lg1)" stroke-width="1.6"/><circle cx="16" cy="16" r="2.2" fill="#5b8bff"/></svg></span>
+        <span>GLOBETEC</span>
+      </div>
+      <span class="chip"><span class="dot"></span> Mantenimiento WordPress · 24/7</span>
+    </div>
+
+    <div>
+      <div class="eyebrow" style="margin-bottom:28px;">Presentación corporativa · 2026</div>
+      <h1 class="title">
+        Tu WordPress<br/>
+        <span class="grad-text">operativo, seguro y vivo.</span><br/>
+        24 / 7 / 365.
+      </h1>
+      <p style="max-width:820px; font-size:24px; color:var(--ink-dim); margin-top:36px;">
+        Mantenimiento profesional WordPress para empresas que no pueden permitirse perder su web. Cumplimos con <b style="color:var(--ink);">ISO 27001 · NIST · HIPAA · NORTIC A2</b>.
+      </p>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+      <div style="display:flex; gap:12px;">
+        <span class="chip">+4 años</span>
+        <span class="chip">99.9% Uptime</span>
+        <span class="chip">&lt;15 min respuesta</span>
+        <span class="chip">Backups diarios</span>
+      </div>
+      <div class="mono" style="font-size:13px; color:var(--ink-mute);">globetecrd.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 PROBLEMA ============ -->
+<section data-screen-label="02 El Problema">
+  <div class="slide bg-grid bg-red" style="display:grid; grid-template-columns: 1fr 1fr; gap:80px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">02 · EL PROBLEMA</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:18px; color:var(--amber);">El problema silencioso</div>
+      <h2 class="title">El <span class="red-text">43%</span> de los ataques se dirige a <span class="red-text">pequeñas empresas.</span></h2>
+      <p style="font-size:22px; color:var(--ink-dim); margin-top:32px; max-width:560px;">
+        WordPress es el CMS más usado del mundo — y también el más atacado. Una web sin mantenimiento profesional <b style="color:var(--ink);">no es una pregunta de "si" será comprometida, sino de "cuándo".</b>
+      </p>
+      <div style="margin-top:32px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="src">Verizon DBIR 2024</span>
+        <span class="src">Sucuri Threat Report</span>
+        <span class="src">WPScan / WPBeginner</span>
+      </div>
+    </div>
+
+    <div style="align-self:center; display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+      <div class="card" style="padding:24px;">
+        <div class="ico danger" style="margin-bottom:16px;"><svg viewBox="0 0 24 24"><path d="M12 2l10 18H2z"/><path d="M12 9v5M12 17v.5"/></svg></div>
+        <div class="display red-text" style="font-size:42px;">~43K</div>
+        <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">sitios WordPress hackeados al día (estimado global)</div>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div class="ico danger" style="margin-bottom:16px;"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M7 11h10M7 15h6"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></div>
+        <div class="display red-text" style="font-size:42px;">96%</div>
+        <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">de las vulnerabilidades WP vienen de plugins desactualizados</div>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div class="ico danger" style="margin-bottom:16px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <div class="display red-text" style="font-size:42px;">277d</div>
+        <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">tiempo medio para detectar una brecha (IBM 2024)</div>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div class="ico danger" style="margin-bottom:16px;"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V11l7-5 7 5v10M9 21v-6h6v6"/></svg></div>
+        <div class="display red-text" style="font-size:42px;">60%</div>
+        <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">de PYMES cierran a los 6 meses de un ciberataque</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 SOBRE NOSOTROS ============ -->
+<section data-screen-label="03 Sobre Nosotros">
+  <div class="slide bg-grid" style="display:flex; flex-direction:column;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">03 · SOBRE NOSOTROS</span></div>
+
+    <div style="margin-top:30px;">
+      <div class="eyebrow" style="margin-bottom:18px;">Sobre nosotros</div>
+      <h2 class="title">Más de <span class="grad-text">4 años</span> manteniendo<br/>WordPress vivos en producción.</h2>
+      <p style="font-size:22px; color:var(--ink-dim); margin-top:24px; max-width:760px;">
+        Somos un equipo especializado <b style="color:var(--ink);">100% en WordPress</b>: seguridad, performance, recuperación de hackeos y cumplimiento normativo. Operamos desde República Dominicana para clientes en LATAM y EE.UU.
+      </p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:18px; margin-top:36px;">
+      <div class="card" style="padding:24px;"><div class="display grad-text" style="font-size:54px;">4+</div><div style="color:var(--ink-dim); font-size:14px;">Años de trayectoria</div></div>
+      <div class="card" style="padding:24px;"><div class="display grad-text" style="font-size:54px;">120+</div><div style="color:var(--ink-dim); font-size:14px;">Sitios WP mantenidos</div></div>
+      <div class="card" style="padding:24px;"><div class="display grad-text" style="font-size:54px;">99.9%</div><div style="color:var(--ink-dim); font-size:14px;">Uptime promedio</div></div>
+      <div class="card" style="padding:24px;"><div class="display grad-text" style="font-size:54px;">&lt;15m</div><div style="color:var(--ink-dim); font-size:14px;">Tiempo de respuesta</div></div>
+    </div>
+
+    <div style="margin-top:36px;">
+      <div class="mono" style="font-size:12px; color:var(--ink-mute); margin-bottom:14px; letter-spacing:0.14em;">— EMPRESAS QUE CONFÍAN EN NOSOTROS</div>
+      <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:12px;">
+        <div style="height:78px; background:#ffffff; border:1px solid rgba(0,0,0,0.05); border-radius:14px; display:flex; align-items:center; justify-content:center; padding:14px; overflow:hidden; transition:all 0.3s ease;">
+          <img src="https://globetecrd.com/assets/img/home-1/brand/Gray-Human-Foundation-Logo-2-1536x487-1.png" style="max-width:100%; max-height:100%; object-fit:contain;" alt="Gray Human Foundation Logo">
+        </div>
+        <div style="height:78px; background:#ffffff; border:1px solid rgba(0,0,0,0.05); border-radius:14px; display:flex; align-items:center; justify-content:center; padding:14px; overflow:hidden; transition:all 0.3s ease;">
+          <img src="https://globetecrd.com/assets/img/home-1/brand/LOGOM-UAFAM-17-9-20211-1.png" style="max-width:100%; max-height:100%; object-fit:contain;" alt="UAFAM Logo">
+        </div>
+        <div style="height:78px; background:#ffffff; border:1px solid rgba(0,0,0,0.05); border-radius:14px; display:flex; align-items:center; justify-content:center; padding:14px; overflow:hidden; transition:all 0.3s ease;">
+          <img src="https://globetecrd.com/assets/img/home-1/brand/igtec-1.png" style="max-width:100%; max-height:100%; object-fit:contain; transform:scale(1.75);" alt="Igtec Logo">
+        </div>
+        <div style="height:78px; background:#ffffff; border:1px solid rgba(0,0,0,0.05); border-radius:14px; display:flex; align-items:center; justify-content:center; padding:14px; overflow:hidden; transition:all 0.3s ease;">
+          <img src="https://globetecrd.com/assets/img/home-1/brand/logo-conexion-header.png" style="max-width:100%; max-height:100%; object-fit:contain;" alt="Logo Conexion">
+        </div>
+        <div style="height:78px; background:#ffffff; border:1px solid rgba(0,0,0,0.05); border-radius:14px; display:flex; align-items:center; justify-content:center; padding:14px; overflow:hidden; transition:all 0.3s ease;">
+          <img src="https://globetecrd.com/assets/img/home-1/brand/ig-logo-mobile3.png" style="max-width:100%; max-height:100%; object-fit:contain;" alt="IG Logo">
+        </div>
+        <div style="height:78px; background:#ffffff; border:1px solid rgba(0,0,0,0.05); border-radius:14px; display:flex; align-items:center; justify-content:center; padding:14px; overflow:hidden; transition:all 0.3s ease;">
+          <img src="https://globetecrd.com/assets/img/home-1/brand/logo-plaintext-3.png" style="max-width:100%; max-height:100%; object-fit:contain;" alt="Plaintext Logo">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 LA SOLUCIÓN ============ -->
+<section data-screen-label="04 La Solución">
+  <div class="slide bg-grid bg-glow">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">04 · LA SOLUCIÓN</span></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px;">Lo que hacemos</div>
+        <h2 class="title">Mantenimiento que<br/><span class="grad-text">previene, no reacciona.</span></h2>
+      </div>
+      <p style="color:var(--ink-dim); max-width:380px; font-size:18px;">Un servicio continuo que combina prevención, monitoreo activo y respuesta inmediata.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap:18px; height:54%;">
+      <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:12px;">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/><path d="M8 12l3 3 5-5"/></svg></div>
+        <div class="display" style="font-size:24px;">Seguridad Activa</div>
+        <div style="color:var(--ink-dim); font-size:14px;">WAF, hardening, escaneo de malware semanal, parcheo de vulnerabilidades 0-day.</div>
+      </div>
+      <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:12px;">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <div class="display" style="font-size:24px;">Monitoreo 24/7</div>
+        <div style="color:var(--ink-dim); font-size:14px;">Uptime, performance y alertas inteligentes. Sabemos antes que tú si algo falla.</div>
+      </div>
+      <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:12px;">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg></div>
+        <div class="display" style="font-size:24px;">Actualizaciones Seguras</div>
+        <div style="color:var(--ink-dim); font-size:14px;">Core, temas y plugins probados en staging antes de tocar producción.</div>
+      </div>
+      <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:12px;">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 8l-4 4 4 4M3 16l4-4-4-4M7 4h10v16H7z"/></svg></div>
+        <div class="display" style="font-size:24px;">Backups Versionados</div>
+        <div style="color:var(--ink-dim); font-size:14px;">Backups diarios externos. Restore en minutos, no horas.</div>
+      </div>
+      <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:12px;">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12c4-6 14-6 18 0-4 6-14 6-18 0z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="display" style="font-size:24px;">Performance &amp; SEO</div>
+        <div style="color:var(--ink-dim); font-size:14px;">Core Web Vitals en verde. Cache, CDN, optimización de imágenes y DB.</div>
+      </div>
+      <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:12px; background:linear-gradient(180deg, rgba(46,107,255,0.2), rgba(91,139,255,0.04)); border-color:rgba(91,139,255,0.45);">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 10h8M8 14h5"/></svg></div>
+        <div class="display" style="font-size:24px;">Cumplimiento Normativo</div>
+        <div style="color:var(--ink-dim); font-size:14px;">ISO 27001 · NIST · HIPAA · NORTIC A2. Tu web cumple, tu equipo legal duerme tranquilo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 VS COMPETENCIA ============ -->
+<section data-screen-label="05 Globetec vs Otros">
+  <div class="slide bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">05 · GLOBETEC vs OTROS</span></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px;">Por qué Globetec</div>
+        <h2 class="title" style="font-size:72px;">No somos solo<br/><span class="grad-text">otra agencia de mantenimiento.</span></h2>
+      </div>
+      <p style="color:var(--ink-dim); max-width:380px; font-size:17px;">Lo que la mayoría hace por defecto, nosotros lo elevamos a estándar profesional.</p>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div style="display:grid; grid-template-columns: 1.7fr 1fr 1fr; align-items:center; padding:18px 24px; border-bottom:1px solid var(--line-2); background:rgba(255,255,255,0.02);">
+        <div class="mono" style="font-size:12px; color:var(--ink-mute); letter-spacing:0.12em;">/ CARACTERÍSTICA</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+          <span class="logo-mark" style="width:22px;height:22px;"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="2"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="2"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="2"/></svg></span>
+          <span class="display grad-text" style="font-size:18px;">GLOBETEC</span>
+        </div>
+        <div style="text-align:center; color:var(--ink-mute); font-family:'Space Grotesk'; font-weight:600; font-size:16px;">Mantenimiento típico</div>
+      </div>
+
+      <div class="vs-row"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M4 10h16M8 14h8M8 17h5"/></svg></div>
+        <div><div class="vs-t">Reportes mensuales detallados</div><div class="vs-d">Todo lo realizado: parches aplicados, vulnerabilidades cerradas, performance.</div></div>
+      </div><div class="vs-us">Incluido</div><div class="vs-them"><span class="x">—</span> Resumen vago o ninguno</div></div>
+
+      <div class="vs-row"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/><path d="M3 6l4 2M21 6l-4 2"/></svg></div>
+        <div><div class="vs-t">Acceso total a hosting y WordPress</div><div class="vs-d">Tu sitio es tuyo. Credenciales completas, siempre. Sin lock-in.</div></div>
+      </div><div class="vs-us">Tú eres dueño</div><div class="vs-them"><span class="x">×</span> Credenciales retenidas</div></div>
+
+      <div class="vs-row"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 18 0 9 9 0 0 1-18 0z"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+        <div><div class="vs-t">Soporte 24/7 en español e inglés</div><div class="vs-d">Equipo bilingüe, sin tickets que se pierden en zonas horarias.</div></div>
+      </div><div class="vs-us">ES + EN · 24/7</div><div class="vs-them"><span class="x">—</span> Horario comercial, un idioma</div></div>
+
+      <div class="vs-row featured"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/><path d="M8 12l3 3 5-5"/></svg></div>
+        <div><div class="vs-t">Protección contra ataques zero-day</div><div class="vs-d">Parcheo virtual mientras el plugin oficial publica el fix. Detección proactiva.</div></div>
+      </div><div class="vs-us">Prioridad #1</div><div class="vs-them"><span class="x">×</span> "Cuando salga el parche"</div></div>
+
+      <div class="vs-row"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2"/><circle cx="9" cy="12" r="3"/><path d="M9 9v6M6 12h6"/></svg></div>
+        <div><div class="vs-t">2FA obligatorio para todos los usuarios</div><div class="vs-d">El 81% de las brechas vienen de credenciales débiles. Lo cerramos de raíz.</div></div>
+      </div><div class="vs-us">Obligatorio</div><div class="vs-them"><span class="x">—</span> Opcional o no implementado</div></div>
+
+      <div class="vs-row"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/><path d="M12 13h5M12 16h3"/></svg></div>
+        <div><div class="vs-t">Seguridad inicial sobre OWASP Top 10</div><div class="vs-d">Hardening basado en el estándar global de vulnerabilidades web.</div></div>
+      </div><div class="vs-us">Estándar base</div><div class="vs-them"><span class="x">—</span> Setup genérico</div></div>
+
+      <div class="vs-row featured"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><path d="M3 18l5-6 4 3 5-7 4 5"/><path d="M3 21h18"/><circle cx="18" cy="7" r="1.5" fill="currentColor"/></svg></div>
+        <div><div class="vs-t">Dashboard de métricas en tiempo real</div><div class="vs-d">Visitas, performance, uptime, eventos de seguridad — todo a un clic.</div></div>
+      </div><div class="vs-us">En vivo</div><div class="vs-them"><span class="x">×</span> Email mensual</div></div>
+
+      <div class="vs-row"><div class="vs-feat">
+        <div class="vs-ico"><svg viewBox="0 0 24 24"><path d="M3 12h6l2-4 2 8 2-4h6"/></svg></div>
+        <div><div class="vs-t">WAF con reglas a medida</div><div class="vs-d">No "instalar y olvidar": tunning continuo por tipo de negocio y patrones de tráfico.</div></div>
+      </div><div class="vs-us">Configurado a medida</div><div class="vs-them"><span class="x">×</span> Reglas por defecto</div></div>
+    </div>
+  </div>
+</section>
+<section data-screen-label="06 Historia · Jose">
+  <div class="story-stage bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">06 · HISTORIA REAL</span></div>
+
+    <div class="story-chapter">
+      <div class="story-num">UNA HISTORIA · BASADA EN HECHOS REALES</div>
+      <h2 class="story-h">Este es <span class="grad-text">José.</span></h2>
+      <p class="story-p">José es gerente de marketing en <b>XYZ Corp.</b>, una empresa con una web corporativa en WordPress que recibe cientos de visitas al día — clientes, prospectos, proveedores.</p>
+      <p class="story-p">Para José, la web era <b>"algo más en la empresa".</b> Funcionaba, se veía bien, y todos asumían que estaría siempre ahí.</p>
+      <p class="story-p" style="color:var(--ink); font-style:italic; border-left:3px solid var(--blue-2); padding-left:18px; margin-top:12px;">"No es prioridad. Cuesta dinero. Si funciona, no lo toques."</p>
+    </div>
+
+    <div style="align-self:center;">
+      <div class="card" style="padding:36px; max-width:520px; margin-left:auto;">
+        <div style="display:flex; align-items:center; gap:18px; margin-bottom:24px;">
+          <div style="width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg, rgba(46,107,255,0.4), rgba(91,139,255,0.1)); border:2px solid rgba(91,139,255,0.5); display:grid; place-items:center; font-family:'Space Grotesk'; font-size:38px; font-weight:700;">J</div>
+          <div>
+            <div class="display" style="font-size:28px;">José M.</div>
+            <div style="color:var(--ink-dim); font-size:15px;">Gerente de Marketing</div>
+            <div style="color:var(--ink-mute); font-size:13px;">XYZ Corp · Empresa de servicios</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div><div class="mono" style="color:var(--ink-mute); font-size:11px;">SITIO</div><div style="font-weight:600;">xyz-corp.com</div></div>
+          <div><div class="mono" style="color:var(--ink-mute); font-size:11px;">STACK</div><div style="font-weight:600;">WordPress + WooCommerce</div></div>
+          <div><div class="mono" style="color:var(--ink-mute); font-size:11px;">VISITAS / MES</div><div style="font-weight:600;">~28,000</div></div>
+          <div><div class="mono" style="color:var(--ink-mute); font-size:11px;">MANTENIMIENTO</div><div style="font-weight:600; color:var(--amber);">Ninguno</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <span class="tl-label" style="text-align:left;">CAPÍTULO</span>
+      <div class="tl-step active"></div>
+      <div class="tl-step"></div>
+      <div class="tl-step"></div>
+      <div class="tl-step"></div>
+      <div class="tl-step"></div>
+      <span class="tl-label">1 / 5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 HISTORIA · ACTO 1 — CAÍDAS ============ -->
+<section data-screen-label="07 Historia · Caidas">
+  <div class="story-stage bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">07 · HISTORIA · ACTO 1</span></div>
+
+    <div class="story-chapter">
+      <div class="story-num">ACTO 1 · LAS GRIETAS</div>
+      <h2 class="story-h">La web<br/><span class="red-text">empieza a caerse.</span></h2>
+      <p class="story-p">Sin previo aviso: 502, 504, pantalla blanca. Una vez al mes. Luego una vez a la semana.</p>
+      <p class="story-p">¿La solución del equipo? <b>Restaurar un backup viejo. Reiniciar el servidor. Y seguir.</b></p>
+      <p class="story-p">Nadie investigó la causa. Nadie revisó plugins. Nadie miró los logs. <b style="color:var(--amber);">"Mientras vuelva a funcionar, está bien."</b></p>
+    </div>
+
+    <div style="align-self:center;">
+      <div class="browser" style="max-width:540px; margin-left:auto;">
+        <div class="bar">
+          <span class="d" style="background:#ff5f57;"></span>
+          <span class="d" style="background:#ffbd2e;"></span>
+          <span class="d" style="background:#28c840;"></span>
+          <div class="url">xyz-corp.com</div>
+        </div>
+        <div class="body" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:280px; gap:14px;">
+          <div class="ico danger" style="width:72px; height:72px; border-radius:20px;"><svg viewBox="0 0 24 24" style="width:36px; height:36px;"><path d="M12 2l10 18H2z"/><path d="M12 9v5M12 17v.5"/></svg></div>
+          <div class="display red-text" style="font-size:54px;">502</div>
+          <div style="font-weight:600;">Bad Gateway</div>
+          <div style="color:var(--ink-mute); font-size:13px;">El servidor no responde</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:14px; max-width:540px; margin-left:auto;">
+        <div class="card" style="padding:14px;"><div class="mono" style="font-size:10px; color:var(--ink-mute);">CAÍDAS / MES</div><div class="display red-text" style="font-size:32px;">14</div></div>
+        <div class="card" style="padding:14px;"><div class="mono" style="font-size:10px; color:var(--ink-mute);">UPTIME</div><div class="display red-text" style="font-size:32px;">92%</div></div>
+        <div class="card" style="padding:14px;"><div class="mono" style="font-size:10px; color:var(--ink-mute);">PRIORIDAD</div><div class="display" style="font-size:18px; color:var(--amber); margin-top:6px;">Ninguna</div></div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <span class="tl-label" style="text-align:left;">CAPÍTULO</span>
+      <div class="tl-step done"></div>
+      <div class="tl-step active"></div>
+      <div class="tl-step"></div>
+      <div class="tl-step"></div>
+      <div class="tl-step"></div>
+      <span class="tl-label">2 / 5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 HISTORIA · ACTO 2 — SEO SPAM ============ -->
+<section data-screen-label="08 Historia · Spam SEO">
+  <div class="story-stage bg-grid bg-red">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">08 · HISTORIA · ACTO 2</span></div>
+
+    <div class="story-chapter">
+      <div class="story-num" style="color:var(--amber);">ACTO 2 · LA INFILTRACIÓN</div>
+      <h2 class="story-h">Google empieza a indexar<br/><span class="red-text">páginas que nadie escribió.</span></h2>
+      <p class="story-p">Mientras todos miraban la web pública, los atacantes ya estaban dentro. Crearon <b>cientos de páginas ocultas</b> usando el dominio de XYZ Corp.</p>
+      <p class="story-p">Contenido vendido al mejor postor: <b style="color:var(--amber);">viagra, casinos online, créditos rápidos.</b></p>
+      <p class="story-p">¿El SEO? Cuidadosamente optimizado. Los atacantes <b>parasitaban la autoridad de dominio</b> que XYZ había construido durante años.</p>
+    </div>
+
+    <div style="align-self:center;">
+      <div class="card" style="padding:28px; max-width:540px; margin-left:auto;">
+        <div class="mono" style="font-size:12px; color:var(--ink-mute); margin-bottom:14px;">GOOGLE · SITE:XYZ-CORP.COM</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="padding:10px 12px; background:rgba(255,255,255,0.03); border-radius:8px; border-left:3px solid var(--cyan); opacity:0.7;">
+            <div style="color:var(--cyan); font-size:12px;">xyz-corp.com</div>
+            <div style="font-weight:600; font-size:14px;">XYZ Corp · Servicios profesionales</div>
+          </div>
+          <div style="padding:10px 12px; background:rgba(255,92,122,0.08); border-radius:8px; border-left:3px solid var(--red);">
+            <div style="color:var(--red); font-size:12px;">xyz-corp.com/blog/buy-cheap-viagra-online</div>
+            <div style="font-weight:600; font-size:14px;">💊 Buy Generic Viagra — 70% OFF Today</div>
+          </div>
+          <div style="padding:10px 12px; background:rgba(255,92,122,0.08); border-radius:8px; border-left:3px solid var(--red);">
+            <div style="color:var(--red); font-size:12px;">xyz-corp.com/casino-online-bonus-2026</div>
+            <div style="font-weight:600; font-size:14px;">🎰 Top Online Casino — Free $500 Bonus</div>
+          </div>
+          <div style="padding:10px 12px; background:rgba(255,92,122,0.08); border-radius:8px; border-left:3px solid var(--red);">
+            <div style="color:var(--red); font-size:12px;">xyz-corp.com/instant-loan-no-credit</div>
+            <div style="font-weight:600; font-size:14px;">💰 Préstamos instantáneos sin verificación</div>
+          </div>
+          <div style="padding:10px 12px; background:rgba(255,92,122,0.08); border-radius:8px; border-left:3px solid var(--red);">
+            <div style="color:var(--red); font-size:12px;">+ 287 resultados más...</div>
+          </div>
+        </div>
+        <div style="margin-top:16px; padding:12px 14px; background:rgba(255,181,71,0.1); border-left:3px solid var(--amber); border-radius:8px; font-size:13px; color:var(--ink);">
+          <b style="color:var(--amber);">⚠ Detectado:</b> SEO spam injection vía plugin desactualizado (CVE-2023-XXXX).
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <span class="tl-label" style="text-align:left;">CAPÍTULO</span>
+      <div class="tl-step done"></div>
+      <div class="tl-step done"></div>
+      <div class="tl-step active"></div>
+      <div class="tl-step"></div>
+      <div class="tl-step"></div>
+      <span class="tl-label">3 / 5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 HISTORIA · ACTO 3 — LA BOMBA ============ -->
+<section data-screen-label="09 Historia · La Bomba">
+  <div class="story-stage bg-red">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">09 · HISTORIA · ACTO 3</span></div>
+
+    <div class="story-chapter">
+      <div class="story-num" style="color:var(--red);">ACTO 3 · LA BOMBA</div>
+      <h2 class="story-h">Y un lunes a las 9:00 a.m.<br/><span class="red-text">explotó.</span></h2>
+      <p class="story-p">Los atacantes activaron la carga final. <b>Cada cliente que abría xyz-corp.com</b> aterrizaba en una página con contenido pornográfico explícito.</p>
+      <p class="story-p">Durante 6 horas. En el horario laboral. En las pantallas de oficinas, clientes corporativos, prospectos en reuniones de ventas.</p>
+      <p class="story-p" style="color:var(--ink); font-style:italic; background:rgba(255,92,122,0.1); border-left:3px solid var(--red); padding:14px 18px; margin-top:8px;">"Mi cliente más grande me llamó. Su CEO había abierto nuestra web en una junta directiva."</p>
+    </div>
+
+    <div style="align-self:center;">
+      <div class="browser" style="max-width:540px; margin-left:auto; border-color:rgba(255,92,122,0.4);">
+        <div class="bar">
+          <span class="d" style="background:#ff5f57;"></span>
+          <span class="d" style="background:#ffbd2e;"></span>
+          <span class="d" style="background:#28c840;"></span>
+          <div class="url" style="color:var(--red);">⚠ xyz-corp.com — sitio comprometido</div>
+        </div>
+        <div class="body" style="background:#1a0810; min-height:300px; padding:32px; display:flex; flex-direction:column; gap:14px;">
+          <div style="background:rgba(255,92,122,0.18); border:1px solid var(--red); padding:14px; border-radius:10px;">
+            <div class="mono" style="font-size:11px; color:var(--red);">⚠ HARMFUL CONTENT WARNING</div>
+            <div style="font-weight:600; font-size:15px; margin-top:4px;">This site contains adult material</div>
+          </div>
+          <div class="ph" style="height:80px; background:repeating-linear-gradient(45deg, rgba(255,92,122,0.1) 0 12px, rgba(0,0,0,0.4) 12px 24px); border-color:rgba(255,92,122,0.4); color:var(--red);">[CONTENIDO CENSURADO]</div>
+          <div class="ph" style="height:80px; background:repeating-linear-gradient(45deg, rgba(255,92,122,0.1) 0 12px, rgba(0,0,0,0.4) 12px 24px); border-color:rgba(255,92,122,0.4); color:var(--red);">[CONTENIDO CENSURADO]</div>
+        </div>
+      </div>
+      <div style="margin-top:14px; max-width:540px; margin-left:auto; display:flex; gap:10px;">
+        <div class="card" style="padding:14px; flex:1; border-color:rgba(255,92,122,0.4);"><div class="mono" style="font-size:10px; color:var(--ink-mute);">DURACIÓN</div><div class="display red-text" style="font-size:28px;">6 hrs</div></div>
+        <div class="card" style="padding:14px; flex:1; border-color:rgba(255,92,122,0.4);"><div class="mono" style="font-size:10px; color:var(--ink-mute);">CLIENTES IMPACTADOS</div><div class="display red-text" style="font-size:28px;">+800</div></div>
+        <div class="card" style="padding:14px; flex:1; border-color:rgba(255,92,122,0.4);"><div class="mono" style="font-size:10px; color:var(--ink-mute);">CONFIANZA</div><div class="display red-text" style="font-size:28px;">0</div></div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <span class="tl-label" style="text-align:left;">CAPÍTULO</span>
+      <div class="tl-step done"></div>
+      <div class="tl-step done"></div>
+      <div class="tl-step done"></div>
+      <div class="tl-step active"></div>
+      <div class="tl-step"></div>
+      <span class="tl-label">4 / 5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 HISTORIA · LECCIÓN ============ -->
+<section data-screen-label="10 Historia · La Leccion">
+  <div class="story-stage bg-grid bg-glow">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">10 · HISTORIA · LA LECCIÓN</span></div>
+
+    <div class="story-chapter">
+      <div class="story-num">EPÍLOGO · LO QUE COSTÓ</div>
+      <h2 class="story-h">Recuperarse costó<br/><span class="grad-text">10× más</span><br/>que prevenirlo.</h2>
+      <p class="story-p">Auditoría forense, limpieza, re-indexación, RRPP, llamadas a clientes, recuperación de reputación, descuentos para recuperar contratos.</p>
+      <p class="story-p">José ahora tiene un plan de mantenimiento profesional. Cuesta <b style="color:var(--ink);">una fracción</b> de lo que perdió en ese lunes negro.</p>
+      <p class="story-p" style="color:var(--cyan); font-weight:600; border-left:3px solid var(--cyan); padding-left:18px;">"Mi web ya no es 'algo más'. Es la primera cara de mi empresa."</p>
+    </div>
+
+    <div style="align-self:center;">
+      <div class="card" style="padding:32px; max-width:540px; margin-left:auto;">
+        <div class="mono" style="font-size:12px; color:var(--cyan); margin-bottom:18px;">/ COSTO REAL · XYZ CORP</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:grid; grid-template-columns: 1fr auto; padding:10px 14px; background:rgba(255,92,122,0.08); border-radius:8px; align-items:center;">
+            <div style="font-size:14px;">Auditoría forense + limpieza</div>
+            <div class="display red-text" style="font-size:20px;">$8,400</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto; padding:10px 14px; background:rgba(255,92,122,0.08); border-radius:8px; align-items:center;">
+            <div style="font-size:14px;">Re-indexación SEO + agencia</div>
+            <div class="display red-text" style="font-size:20px;">$6,200</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto; padding:10px 14px; background:rgba(255,92,122,0.08); border-radius:8px; align-items:center;">
+            <div style="font-size:14px;">Crisis comms + RRPP</div>
+            <div class="display red-text" style="font-size:20px;">$5,500</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto; padding:10px 14px; background:rgba(255,92,122,0.08); border-radius:8px; align-items:center;">
+            <div style="font-size:14px;">Descuentos para retener clientes</div>
+            <div class="display red-text" style="font-size:20px;">$22,000</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto; padding:14px 16px; background:linear-gradient(135deg, rgba(255,92,122,0.18), rgba(255,181,71,0.05)); border:1px solid var(--red); border-radius:10px; align-items:center; margin-top:6px;">
+            <div style="font-weight:700;">Costo total del incidente</div>
+            <div class="display red-text" style="font-size:32px;">$42,100</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto; padding:12px 14px; background:rgba(46,107,255,0.12); border:1px solid var(--blue-2); border-radius:8px; align-items:center; margin-top:4px;">
+            <div style="font-weight:600;">Mantenimiento anual con Globetec</div>
+            <div class="display grad-text" style="font-size:22px;">~$3,600</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <span class="tl-label" style="text-align:left;">CAPÍTULO</span>
+      <div class="tl-step done"></div>
+      <div class="tl-step done"></div>
+      <div class="tl-step done"></div>
+      <div class="tl-step done"></div>
+      <div class="tl-step active"></div>
+      <span class="tl-label">5 / 5</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 COMPLIANCE ============ -->
+<section data-screen-label="11 Cumplimiento">
+  <div class="slide bg-grid bg-glow">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">11 · CUMPLIMIENTO NORMATIVO</span></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px;">Cumplimiento normativo</div>
+        <h2 class="title" style="font-size:72px;">Ayudamos a tu empresa<br/>a <span class="grad-text">cumplir con los marcos que importan.</span></h2>
+      </div>
+      <p style="color:var(--ink-dim); max-width:380px; font-size:17px;">Nuestro mantenimiento incluye los controles técnicos web que estos estándares exigen.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:18px;">
+      <!-- ISO 27001 -->
+      <div class="comp-card">
+        <span class="comp-badge">★ ISO/IEC 27001:2022</span>
+        <div class="display" style="font-size:30px;">ISO 27001</div>
+        <div style="color:var(--ink-dim); font-size:13px; line-height:1.55;">Sistema de Gestión de Seguridad de la Información. El estándar global.</div>
+        <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
+          <div class="mono" style="font-size:10px; color:var(--blue-2); margin-bottom:8px;">/ POR QUÉ NOSOTROS</div>
+          <ul style="margin:0; padding:0 0 0 14px; color:var(--ink-dim); font-size:13px; line-height:1.6;">
+            <li>Controles A.5–A.18 aplicados al stack WP</li>
+            <li>Registro de cambios &amp; auditoría continua</li>
+            <li>Backups cifrados + retención documentada</li>
+            <li>Gestión de accesos &amp; MFA obligatorio</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- NIST -->
+      <div class="comp-card">
+        <span class="comp-badge">★ NIST CSF 2.0</span>
+        <div class="display" style="font-size:30px;">NIST</div>
+        <div style="color:var(--ink-dim); font-size:13px; line-height:1.55;">Cybersecurity Framework del NIST (EE.UU.). Referente mundial.</div>
+        <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
+          <div class="mono" style="font-size:10px; color:var(--blue-2); margin-bottom:8px;">/ POR QUÉ NOSOTROS</div>
+          <ul style="margin:0; padding:0 0 0 14px; color:var(--ink-dim); font-size:13px; line-height:1.6;">
+            <li>Identify · inventario de activos WP</li>
+            <li>Protect · WAF, hardening, parcheo</li>
+            <li>Detect · monitoreo y alertas 24/7</li>
+            <li>Respond &amp; Recover · runbook + restore</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- HIPAA -->
+      <div class="comp-card">
+        <span class="comp-badge">★ HIPAA · 45 CFR Part 164</span>
+        <div class="display" style="font-size:30px;">HIPAA</div>
+        <div style="color:var(--ink-dim); font-size:13px; line-height:1.55;">Para empresas de salud que manejan PHI (información médica protegida).</div>
+        <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
+          <div class="mono" style="font-size:10px; color:var(--blue-2); margin-bottom:8px;">/ POR QUÉ NOSOTROS</div>
+          <ul style="margin:0; padding:0 0 0 14px; color:var(--ink-dim); font-size:13px; line-height:1.6;">
+            <li>Cifrado en tránsito y reposo (TLS 1.3 + AES-256)</li>
+            <li>Audit logs &amp; controles de acceso PHI</li>
+            <li>BAA disponible · hosting HIPAA-eligible</li>
+            <li>Plan de respuesta a brechas documentado</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- NORTIC A2 -->
+      <div class="comp-card" style="background:linear-gradient(180deg, rgba(46,107,255,0.22), rgba(91,139,255,0.04)); border-color:rgba(91,139,255,0.45);">
+        <span class="comp-badge" style="background:rgba(124,212,255,0.2); border-color:rgba(124,212,255,0.5); color:var(--cyan);">★ NORTIC A2:2016 · OGTIC RD</span>
+        <div class="display" style="font-size:30px;">NORTIC A2</div>
+        <div style="color:var(--ink-dim); font-size:13px; line-height:1.55;">Norma dominicana para portales web gubernamentales y entidades reguladas.</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:14px; margin-top:4px;">
+          <div class="mono" style="font-size:10px; color:var(--cyan); margin-bottom:8px;">/ POR QUÉ NOSOTROS</div>
+          <ul style="margin:0; padding:0 0 0 14px; color:var(--ink-dim); font-size:13px; line-height:1.6;">
+            <li>Accesibilidad WCAG 2.1 AA verificada</li>
+            <li>SSL obligatorio + cabeceras de seguridad</li>
+            <li>Transparencia · contacto · ley 200-04</li>
+            <li>Reportes de cumplimiento para OGTIC</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; padding:18px 22px; background:rgba(91,139,255,0.08); border-left:3px solid var(--cyan); border-radius:10px; font-size:15px; color:var(--ink); line-height:1.55;">
+      <span style="color:var(--cyan); font-weight:600;">★ ¿Por qué importa?</span> Estos estándares son auditados. Sin los controles técnicos correctos en tu WordPress, tu empresa <b>no pasa la auditoría</b> — pierde contratos, multas, licencias. Nuestro mantenimiento es la capa que cierra ese gap.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 PLANES ============ -->
+<section data-screen-label="12 Planes">
+  <div class="slide bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">12 · PLANES</span></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px;">Planes de mantenimiento</div>
+        <h2 class="title" style="font-size:72px;">Tres niveles.<br/><span class="grad-text">Una sola tranquilidad.</span></h2>
+      </div>
+      <p style="color:var(--ink-dim); max-width:340px; font-size:17px;">Compara y elige según el tamaño de tu operación y nivel de exposición.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px;">
+      <!-- ESSENTIAL -->
+      <div class="plan">
+        <div>
+          <div class="plan-label">ESENCIAL</div>
+          <div class="display" style="font-size:24px; margin-top:6px;">Esencial</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">Para webs corporativas o blogs de bajo tráfico.</div>
+        </div>
+        <div class="plan-price">$100 <small>USD / mes</small></div>
+        <ul>
+          <li>Actualizaciones mensuales (core, plugins, temas)</li>
+          <li>Backups semanales externos</li>
+          <li>Monitoreo de uptime 24/7</li>
+          <li>Escaneo de malware mensual</li>
+          <li>1 hora de soporte técnico al mes</li>
+          <li>Reporte mensual de salud</li>
+        </ul>
+      </div>
+
+      <!-- PROFESSIONAL -->
+      <div class="plan featured">
+        <span class="plan-badge">Más popular</span>
+        <div>
+          <div class="plan-label" style="color:var(--cyan);">PROFESIONAL</div>
+          <div class="display" style="font-size:24px; margin-top:6px;">Profesional</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">Para ecommerce, LMS y empresas con tráfico medio-alto.</div>
+        </div>
+        <div class="plan-price grad-text">$300 <small style="color:var(--ink-dim);">USD / mes</small></div>
+        <ul>
+          <li><b style="color:var(--ink);">Todo lo del Esencial, más:</b></li>
+          <li>Actualizaciones semanales con staging</li>
+          <li>Backups diarios cifrados</li>
+          <li>WAF + hardening avanzado</li>
+          <li>Optimización de performance (Core Web Vitals)</li>
+          <li>4 horas de soporte técnico al mes</li>
+          <li>Reporte detallado quincenal</li>
+          <li>Soporte prioritario WhatsApp / Slack</li>
+        </ul>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="plan">
+        <div>
+          <div class="plan-label">ENTERPRISE</div>
+          <div class="display" style="font-size:24px; margin-top:6px;">Enterprise</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:4px;">Para empresas reguladas, gobierno, salud, finanzas.</div>
+        </div>
+        <div class="plan-price">$600 <small>USD / mes</small></div>
+        <ul>
+          <li><b style="color:var(--ink);">Todo lo del Profesional, más:</b></li>
+          <li>Monitoreo 24/7 con SLA garantizado</li>
+          <li>Servidor de staging permanente</li>
+          <li>Soporte técnico ilimitado</li>
+          <li>Cumplimiento ISO 27001 · NIST · HIPAA · NORTIC A2</li>
+          <li>Auditorías de seguridad trimestrales</li>
+          <li>Account manager dedicado</li>
+          <li>Tiempo de respuesta &lt; 15 min</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:22px; text-align:center; font-size:14px; color:var(--ink-mute);">
+      Todos los planes incluyen migración inicial gratuita. <span style="color:var(--cyan);">→ globetecrd.com/servicios/mantenimiento-web</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 ROI CALCULATOR ============ -->
+<section data-screen-label="13 ROI">
+  <div class="slide bg-grid bg-glow" style="display:grid; grid-template-columns: 1fr 1.2fr; gap:48px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">13 · ROI</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:18px;">Calculadora ROI</div>
+      <h2 class="title" style="font-size:72px;">Calcula tu<br/><span class="grad-text">retorno real.</span></h2>
+      <p style="font-size:20px; color:var(--ink-dim); margin-top:24px; max-width:480px;">
+        Ajusta tu plan, tu tipo de negocio y el tamaño de tu equipo. Los números se basan en informes reales de la industria.
+      </p>
+      <div style="margin-top:24px; display:flex; gap:8px; flex-wrap:wrap;">
+        <span class="src">IBM · Data Breach 2024</span>
+        <span class="src">Gartner · IT Downtime</span>
+        <span class="src">Ponemon Institute</span>
+        <span class="src">ITIC 2024</span>
+        <span class="src">BLS 2025</span>
+      </div>
+    </div>
+
+    <div class="roi-calc card" style="align-self:center; padding:26px; background:linear-gradient(180deg, rgba(46,107,255,0.16), rgba(91,139,255,0.02)); border-color:rgba(91,139,255,0.35);">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="mono" style="color:var(--cyan); font-size:12px;">/ AJUSTA TU ESCENARIO</div>
+        <div class="mono" style="font-size:10px; color:var(--ink-mute);">● EN VIVO</div>
+      </div>
+
+      <!-- Plan selector -->
+      <div style="margin-top:14px;">
+        <div class="mono" style="font-size:10px; color:var(--ink-dim); margin-bottom:8px; letter-spacing:0.1em;">PLAN SELECCIONADO</div>
+        <div data-roi="plans" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
+          <button data-p="100" class="tp"><span class="pl">Esencial</span><span class="pp">$100<small style="font-size:11px; color:var(--ink-mute);">/mes</small></span></button>
+          <button data-p="300" class="tp active"><span class="pl">Profesional</span><span class="pp">$300<small style="font-size:11px; color:var(--ink-mute);">/mes</small></span></button>
+          <button data-p="600" class="tp"><span class="pl">Enterprise</span><span class="pp">$600<small style="font-size:11px; color:var(--ink-mute);">/mes</small></span></button>
+        </div>
+      </div>
+
+      <!-- Sliders -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:14px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono" style="font-size:10px; color:var(--ink-dim); letter-spacing:0.1em;">EMPLEADOS</span>
+            <span class="mono" style="font-size:13px; color:var(--cyan); font-weight:600;"><span data-roi="emp-val">25</span> personas</span>
+          </div>
+          <input type="range" data-roi="emp" min="1" max="500" step="1" value="25" />
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono" style="font-size:10px; color:var(--ink-dim); letter-spacing:0.1em;">EQUIPO QUE GESTIONA LA WEB</span>
+            <span class="mono" style="font-size:13px; color:var(--cyan); font-weight:600;"><span data-roi="team-val">3</span> personas</span>
+          </div>
+          <input type="range" data-roi="team" min="1" max="30" step="1" value="3" />
+        </div>
+      </div>
+
+      <!-- Business type -->
+      <div style="margin-top:12px;">
+        <div class="mono" style="font-size:10px; color:var(--ink-dim); margin-bottom:8px; letter-spacing:0.1em;">TIPO DE NEGOCIO</div>
+        <div data-roi="pills" style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button data-t="info" class="tp" style="padding:7px 12px; font-size:12px;">Web informativa</button>
+          <button data-t="services" class="tp" style="padding:7px 12px; font-size:12px;">Servicios pro</button>
+          <button data-t="ecommerce" class="tp active" style="padding:7px 12px; font-size:12px;">Ecommerce</button>
+          <button data-t="finance" class="tp" style="padding:7px 12px; font-size:12px;">Banca / Gobierno</button>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(91,139,255,0.25);">
+        <div>
+          <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">INVERSIÓN ANUAL</div>
+          <div class="display" data-roi="o-invest" style="font-size:26px; margin-top:2px;">$3,600</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">RIESGO EVITADO</div>
+          <div class="display" data-roi="o-benefit" style="font-size:26px; margin-top:2px;">$64K</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">ROI MÚLTIPLO</div>
+          <div class="display" data-roi="o-mul" style="font-size:26px; margin-top:2px;">18×</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">RETORNO NETO</div>
+          <div class="display grad-text" data-roi="o-pct" style="font-size:26px; margin-top:2px;">+1700%</div>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:10px;">
+        <div class="bd" data-src="Sucuri / SiteLock 2024 · costo medio limpieza WP $1.5K–$5K. Frecuencia: ~1.4 incidentes/año en sitios sin mantenimiento."><div class="bd-l">Recuperación post-incidente</div><div class="bd-v mono" data-roi="b-rec">$7K</div></div>
+        <div class="bd" data-src="Gartner 2024 · SMB e-commerce $50K–$100K/hr downtime. Atlassian/Ponemon: $137–$427/min. Cálculo: ~4 días sin recuperación profesional."><div class="bd-l">Downtime evitado</div><div class="bd-v mono" data-roi="b-down">$67K</div></div>
+        <div class="bd" data-src="IBM Cost of a Data Breach 2024 · pérdida de negocio = mayor componente. 60% de SMB cierran a 6 meses (Inc.com / SiteLock)."><div class="bd-l">Reputación &amp; confianza</div><div class="bd-v mono" data-roi="b-rep">$11K</div></div>
+        <div class="bd" data-src="BLS 2025 · compensación media privada $47.92/hr. Estimación conservadora: 10 hrs/mes por persona en mantenimiento manual a $25/hr."><div class="bd-l">Horas equipo ahorradas</div><div class="bd-v mono" data-roi="b-team">$9K</div></div>
+      </div>
+
+      <div style="margin-top:12px; padding:12px 14px; background:rgba(91,139,255,0.08); border-left:3px solid var(--cyan); border-radius:8px; font-size:12.5px; color:var(--ink); line-height:1.5;">
+        <span style="color:var(--cyan); font-weight:600;">★ Pasa el mouse sobre cada métrica</span> para ver el informe que la respalda.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 CTA ============ -->
+<section data-screen-label="14 CTA">
+  <div class="slide bg-grid bg-glow" style="display:flex; flex-direction:column; justify-content:space-between;">
+    <div class="chrome top" style="position:static; padding:0;"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><defs><linearGradient id="lg2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#2e6bff"/></linearGradient></defs><circle cx="16" cy="16" r="14" fill="none" stroke="url(#lg2)" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="url(#lg2)" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="url(#lg2)" stroke-width="1.6"/><circle cx="16" cy="16" r="2.2" fill="#5b8bff"/></svg></span>GLOBETEC</div><span class="chip"><span class="dot"></span>Próximo paso</span></div>
+
+    <div style="display:grid; grid-template-columns: 1fr auto; gap:80px; align-items:center; flex:1; margin:auto 0;">
+      <div style="text-align:left;">
+        <div class="eyebrow" style="margin-bottom:20px;">Auditoría Gratuita</div>
+        <h1 class="title" style="font-size:96px; line-height:1.0;">
+          No esperes a ser<br/>
+          <span class="red-text">el próximo José.</span>
+        </h1>
+        <p style="font-size:24px; color:var(--ink-dim); margin-top:28px; max-width:680px; line-height:1.55;">
+          Solicita una <b style="color:var(--ink);">auditoría gratuita</b> de tu WordPress. Te entregamos un informe con vulnerabilidades reales, brechas de cumplimiento y plan de acción — sin compromiso.
+        </p>
+
+        <div style="display:flex; gap:18px; align-items:center; margin-top:44px;">
+          <a class="btn btn-primary" href="https://globetecrd.com" target="_blank" rel="noopener" style="padding:16px 28px; font-size:18px;">
+            Solicitar auditoría gratis →
+          </a>
+          <span class="btn btn-ghost mono" style="padding:16px 28px; font-size:18px;">globetecrd.com</span>
+        </div>
+      </div>
+
+      <!-- QR Code Card -->
+      <style>
+        @keyframes rgbBorder {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      </style>
+      <div class="card" style="padding:32px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid var(--line-2); border-radius:32px; text-align:center; width:340px; display:flex; flex-direction:column; align-items:center; gap:20px; box-shadow:0 30px 60px rgba(0,0,0,0.4);">
+        <div style="position:relative; width:260px; height:260px; display:flex; align-items:center; justify-content:center; z-index:1;">
+          <!-- Animated gradient borders -->
+          <div style="position:absolute; inset:-5px; border-radius:25px; background:linear-gradient(90deg, #ff2a5f, #7cd4ff, #2e6bff, #ff2a5f); background-size:300% 300%; animation:rgbBorder 4s linear infinite; z-index:-1;"></div>
+          <div style="position:absolute; inset:-5px; border-radius:25px; background:linear-gradient(90deg, #ff2a5f, #7cd4ff, #2e6bff, #ff2a5f); background-size:300% 300%; animation:rgbBorder 4s linear infinite; filter:blur(20px); opacity:0.75; z-index:-2;"></div>
+          
+          <!-- White canvas for scan contrast -->
+          <div style="position:absolute; inset:0; background:#ffffff; border-radius:20px; z-index:-1;"></div>
+          
+          <img src="qr.png" style="width:220px; height:220px; object-fit:contain; z-index:2;" alt="QR Code WordPress Audit">
+        </div>
+        <div style="font-size:16px; line-height:1.45; color:var(--ink-dim); margin-top:8px;">
+          <span style="color:var(--cyan); font-weight:600; font-size:18px; display:block; margin-bottom:6px; letter-spacing:0.08em;">ESCANEA AQUÍ</span>
+          Para iniciar tu análisis de WordPress gratis.
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+      <div style="display:flex; gap:36px;">
+        <div><div class="mono" style="font-size:12px; color:var(--ink-mute);">SITIO</div><div style="font-weight:600; margin-top:4px;">globetecrd.com</div></div>
+        <div><div class="mono" style="font-size:12px; color:var(--ink-mute);">RESPUESTA</div><div style="font-weight:600; margin-top:4px;">&lt; 24 horas</div></div>
+        <div><div class="mono" style="font-size:12px; color:var(--ink-mute);">COSTO</div><div style="font-weight:600; margin-top:4px;">$0 USD</div></div>
+      </div>
+      <div class="mono" style="color:var(--ink-mute); font-size:13px;">© GLOBETEC · 2026</div>
+    </div>
+  </div>
+</section>
+
+</deck-stage>
+
+<!-- Presenter toolbar -->
+<div id="present-toolbar" role="toolbar" aria-label="Controles de presentación">
+  <button id="pt-fs" type="button" title="Pantalla completa (F)">
+    <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    <span id="pt-fs-label">Pantalla completa</span>
+  </button>
+  <button id="pt-skip" type="button" title="Ocultar este slide durante la presentación (H)">
+    <svg viewBox="0 0 24 24"><path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/></svg>
+    <span id="pt-skip-label">Ocultar slide</span>
+  </button>
+</div>
+
+<script>
+(function(){
+  /* ============ ROI CALCULATOR ============
+   * Sources:
+   *   - IBM Cost of a Data Breach 2024 (avg $4.88M global; lost business = top cost)
+   *   - Sucuri / SiteLock 2024 (avg WP cleanup $1.5K–$5K, ~1.4 incidents/yr)
+   *   - Gartner 2024 (downtime SMB e-commerce $50K–$100K/hr)
+   *   - Atlassian / Ponemon (SMB $137–$427/min downtime)
+   *   - ITIC 2024 (90% report downtime > $300K/hr)
+   *   - BLS 2025 (avg private compensation $47.92/hr)
+   *   - Inc.com / SiteLock SMB (60% close within 6 months of attack)
+   */
+  const TYPES = {
+    info:      { recovery: 2500,  downtimeDay: 1200,  reputation: 4500,  fines: 0     },
+    services:  { recovery: 3500,  downtimeDay: 3500,  reputation: 9000,  fines: 0     },
+    ecommerce: { recovery: 5000,  downtimeDay: 12000, reputation: 18000, fines: 0     },
+    finance:   { recovery: 9000,  downtimeDay: 38000, reputation: 42000, fines: 20000 }
+  };
+  const INCIDENTS_PER_YEAR = 1.4;
+  const DOWNTIME_DAYS = 4;
+  const REPUTATION_FACTOR = 0.6;
+  const TEAM_HOURS_PER_MONTH = 10;
+  const TEAM_RATE = 25;
+  // Higher plans reduce probability/severity. Coverage = % of risk neutralized.
+  const PLAN_COVERAGE = { 100: 0.55, 300: 0.78, 600: 0.94 };
+  // More employees → more access points → slightly higher risk surface.
+  const EMP_RISK = emp => 1 + Math.min(emp / 500, 1) * 0.6; // up to 1.6× at 500
+
+  const state = { plan: 300, team: 3, emp: 25, type: 'ecommerce' };
+  const q = sel => document.querySelector('[data-roi="'+sel+'"]');
+  const fmt = n => {
+    if (n >= 1000) {
+      const k = n/1000;
+      return '$' + (k >= 100 ? Math.round(k) : k.toFixed(1).replace(/\.0$/,'')) + 'K';
+    }
+    return '$' + Math.round(n).toLocaleString();
+  };
+  const fmtFull = n => '$' + Math.round(n).toLocaleString();
+
+  function calc(){
+    const t = TYPES[state.type];
+    const annual = state.plan * 12;
+    const coverage = PLAN_COVERAGE[state.plan] || 0.78;
+    const riskMul = EMP_RISK(state.emp);
+
+    const recovery   = t.recovery   * INCIDENTS_PER_YEAR * coverage * riskMul;
+    const downtime   = t.downtimeDay * DOWNTIME_DAYS * INCIDENTS_PER_YEAR * coverage * riskMul;
+    const reputation = t.reputation * REPUTATION_FACTOR * coverage * riskMul;
+    const fines      = t.fines * coverage;
+    const teamSaved  = state.team * TEAM_HOURS_PER_MONTH * TEAM_RATE * 12;
+    const benefit    = recovery + downtime + reputation + fines + teamSaved;
+    const mul = benefit / annual;
+    const pct = (benefit - annual) / annual * 100;
+
+    q('emp-val').textContent  = state.emp;
+    q('team-val').textContent = state.team;
+    q('o-invest').textContent = fmtFull(annual);
+    q('o-benefit').textContent = fmt(benefit);
+    q('o-mul').textContent = mul.toFixed(1) + '×';
+    q('o-pct').textContent = (pct >= 0 ? '+' : '') + Math.round(pct).toLocaleString() + '%';
+    q('b-rec').textContent = fmt(recovery);
+    q('b-down').textContent = fmt(downtime);
+    q('b-rep').textContent = fmt(reputation + fines);
+    q('b-team').textContent = fmt(teamSaved);
+  }
+
+  document.querySelector('[data-roi="emp"]').addEventListener('input', e => { state.emp = +e.target.value; calc(); });
+  document.querySelector('[data-roi="team"]').addEventListener('input', e => { state.team = +e.target.value; calc(); });
+  document.querySelectorAll('[data-roi="pills"] .tp').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-roi="pills"] .tp').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.type = b.dataset.t;
+      calc();
+    });
+  });
+  document.querySelectorAll('[data-roi="plans"] .tp').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-roi="plans"] .tp').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.plan = +b.dataset.p;
+      calc();
+    });
+  });
+  calc();
+
+  /* ============ PRESENTER TOOLBAR ============ */
+  const tb = document.getElementById('present-toolbar');
+  const fsBtn = document.getElementById('pt-fs');
+  const fsLabel = document.getElementById('pt-fs-label');
+  const skipBtn = document.getElementById('pt-skip');
+  const skipLabel = document.getElementById('pt-skip-label');
+  const deck = document.querySelector('deck-stage');
+
+  function isFs(){ return !!document.fullscreenElement; }
+  function syncFsBtn(){
+    if (isFs()) { fsBtn.classList.add('active'); fsLabel.textContent = 'Salir'; }
+    else { fsBtn.classList.remove('active'); fsLabel.textContent = 'Pantalla completa'; }
+  }
+  fsBtn.addEventListener('click', async () => {
+    try {
+      if (!isFs()) await (document.documentElement.requestFullscreen?.() || document.documentElement.webkitRequestFullscreen?.());
+      else await (document.exitFullscreen?.() || document.webkitExitFullscreen?.());
+    } catch(e) {}
+  });
+  document.addEventListener('fullscreenchange', syncFsBtn);
+  document.addEventListener('webkitfullscreenchange', syncFsBtn);
+
+  function currentSlide(){
+    if (!deck) return null;
+    if (typeof deck._index === 'number' && deck._slides) return deck._slides[deck._index] || null;
+    return null;
+  }
+  function syncSkipBtn(){
+    const s = currentSlide();
+    if (!s) { skipLabel.textContent = 'Ocultar slide'; skipBtn.classList.remove('active'); return; }
+    if (s.hasAttribute('data-deck-skip')) { skipLabel.textContent = 'Slide oculto · Mostrar'; skipBtn.classList.add('active'); }
+    else { skipLabel.textContent = 'Ocultar slide'; skipBtn.classList.remove('active'); }
+  }
+  skipBtn.addEventListener('click', () => {
+    const s = currentSlide();
+    if (!s) return;
+    if (s.hasAttribute('data-deck-skip')) s.removeAttribute('data-deck-skip');
+    else s.setAttribute('data-deck-skip', '');
+    syncSkipBtn();
+  });
+  if (deck) deck.addEventListener('slidechange', syncSkipBtn);
+  setTimeout(syncSkipBtn, 100);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === 'f' || e.key === 'F') { e.preventDefault(); fsBtn.click(); }
+    else if (e.key === 'h' || e.key === 'H') { e.preventDefault(); skipBtn.click(); }
+  });
+
+  let idleT;
+  function bumpIdle(){
+    tb.classList.remove('idle');
+    clearTimeout(idleT);
+    idleT = setTimeout(() => tb.classList.add('idle'), 2800);
+  }
+  ['mousemove','keydown','touchstart'].forEach(ev => document.addEventListener(ev, bumpIdle, {passive:true}));
+  bumpIdle();
+  syncFsBtn();
+})();
+</script>
+
+</body>
+</html>
