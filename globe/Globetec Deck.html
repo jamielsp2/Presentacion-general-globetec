@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>GLOBETEC · Presentación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="deck-stage.js"></script>
+<style>
+  :root {
+    --bg: #05070d;
+    --bg-2: #0a0f1f;
+    --bg-3: #11192d;
+    --ink: #f5f7ff;
+    --ink-dim: #a6b0c8;
+    --ink-mute: #6c7791;
+    --blue: #2e6bff;
+    --blue-2: #5b8bff;
+    --blue-elec: #4d8cff;
+    --cyan: #7cd4ff;
+    --line: rgba(255,255,255,0.08);
+    --line-2: rgba(255,255,255,0.14);
+    --grid: rgba(91,139,255,0.08);
+  }
+  html, body { margin:0; background:#000; color:var(--ink); font-family:'Inter', system-ui, sans-serif; }
+  deck-stage { background:#000; }
+  deck-stage > section {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 22px;
+    line-height: 1.45;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Shared */
+  .display { font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.02em; }
+  .mono { font-family:'JetBrains Mono', monospace; }
+  .eyebrow { font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--blue-2); letter-spacing:0.18em; text-transform:uppercase; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid var(--line-2); border-radius:999px; font-size:13px; color:var(--ink-dim); background:rgba(255,255,255,0.02); }
+  .chip .dot { width:6px; height:6px; border-radius:50%; background:var(--blue-elec); box-shadow:0 0 12px var(--blue-elec); }
+  .btn { display:inline-flex; align-items:center; gap:10px; padding:14px 22px; border-radius:999px; font-weight:600; font-size:16px; }
+  .btn-primary { background: linear-gradient(135deg, #2e6bff 0%, #5b8bff 100%); color:#fff; box-shadow:0 12px 40px -10px rgba(46,107,255,0.6); }
+  .btn-ghost { border:1px solid var(--line-2); color:var(--ink); }
+
+  /* Backgrounds */
+  .bg-grid::before {
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 80%);
+    pointer-events:none;
+  }
+  .bg-glow::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 600px 400px at 15% 20%, rgba(46,107,255,0.35), transparent 60%),
+      radial-gradient(ellipse 500px 400px at 90% 90%, rgba(91,139,255,0.18), transparent 70%);
+  }
+
+  /* Chrome */
+  .chrome { position:absolute; left:64px; right:64px; display:flex; align-items:center; justify-content:space-between; z-index:5; }
+  .chrome.top { top:48px; }
+  .chrome.bot { bottom:48px; }
+  .logo { display:flex; align-items:center; gap:12px; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:18px; letter-spacing:0.02em; }
+  .logo-mark { width:28px; height:28px; position:relative; }
+  .logo-mark svg { width:100%; height:100%; display:block; }
+
+  /* Headings */
+  h1.title { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:120px; line-height:0.95; letter-spacing:-0.04em; margin:0; }
+  h2.title { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:88px; line-height:0.98; letter-spacing:-0.035em; margin:0; }
+  h3.title { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:56px; line-height:1.0; letter-spacing:-0.03em; margin:0; }
+  .grad-text { background: linear-gradient(120deg, #ffffff 0%, #7cd4ff 50%, #5b8bff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  /* Slide layouts */
+  .slide { width:100%; height:100%; padding:120px 120px 100px; box-sizing:border-box; position:relative; }
+  .slide-num { position:absolute; right:64px; bottom:48px; font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--ink-mute); }
+
+  /* Cards */
+  .card { background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border:1px solid var(--line-2); border-radius:24px; padding:32px; position:relative; overflow:hidden; }
+  .card .num { font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--blue-2); }
+
+  /* Service icon tile */
+  .ico { width:64px; height:64px; border-radius:18px; display:grid; place-items:center; background:linear-gradient(135deg, rgba(46,107,255,0.22), rgba(91,139,255,0.08)); border:1px solid rgba(91,139,255,0.35); position:relative; }
+  .ico svg { width:30px; height:30px; stroke:var(--cyan); fill:none; stroke-width:1.6; }
+
+  /* Stat blocks */
+  .stat-n { font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:88px; line-height:0.9; letter-spacing:-0.04em; }
+  .stat-l { color:var(--ink-dim); font-size:15px; margin-top:8px; }
+
+  /* Placeholder strip */
+  .ph { background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 10px, rgba(255,255,255,0.02) 10px 20px);
+    border:1px dashed var(--line-2); border-radius:14px; display:grid; place-items:center; color:var(--ink-mute); font-family:'JetBrains Mono', monospace; font-size:12px; }
+
+  /* ROI calculator controls */
+  .roi-calc input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:4px; background:rgba(255,255,255,0.12); border-radius:2px; margin-top:6px; outline:none; cursor:pointer; }
+  .roi-calc input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:#5b8bff; cursor:pointer; box-shadow:0 0 0 4px rgba(91,139,255,0.18); border:none; }
+  .roi-calc input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:#5b8bff; cursor:pointer; border:none; box-shadow:0 0 0 4px rgba(91,139,255,0.18); }
+  .roi-calc .tp { background:rgba(255,255,255,0.04); border:1px solid var(--line-2); color:var(--ink-dim); padding:7px 12px; border-radius:999px; font-size:12px; cursor:pointer; font-family:'Inter', sans-serif; transition:all .15s ease; }
+  .roi-calc .tp:hover { color:var(--ink); border-color:rgba(91,139,255,0.4); }
+  .roi-calc .tp.active { background:linear-gradient(135deg,#2e6bff,#5b8bff); color:#fff; border-color:transparent; box-shadow:0 4px 12px -4px rgba(46,107,255,0.6); }
+  .roi-calc .bd { padding:8px 10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.05); border-radius:8px; position:relative; cursor:help; }
+  .roi-calc .bd-l { font-size:10px; color:var(--ink-mute); letter-spacing:0.04em; }
+  .roi-calc .bd-v { color:var(--ink); font-size:14px; font-weight:600; margin-top:2px; }
+  .roi-calc .bd[data-src]:hover::after {
+    content: attr(data-src);
+    position:absolute; bottom:calc(100% + 8px); left:0; right:0;
+    background:#0a0f1f; color:#f5f7ff; border:1px solid rgba(91,139,255,0.4);
+    padding:8px 10px; border-radius:8px; font-size:11px; line-height:1.4;
+    z-index:10; font-family:'Inter', sans-serif; font-weight:400;
+    box-shadow:0 8px 24px -6px rgba(0,0,0,0.6);
+  }
+  .roi-calc .src { display:inline-block; padding:2px 8px; background:rgba(91,139,255,0.18); border:1px solid rgba(91,139,255,0.35); border-radius:4px; font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--cyan); letter-spacing:0.02em; }
+
+  /* Presenter toolbar (fullscreen + skip slide) */
+  #present-toolbar { position:fixed; bottom:16px; right:16px; z-index:9999; display:flex; gap:8px; background:rgba(10,15,31,0.88); backdrop-filter:blur(12px); border:1px solid rgba(91,139,255,0.3); border-radius:999px; padding:6px; box-shadow:0 12px 40px -10px rgba(0,0,0,0.6); font-family:'Inter', sans-serif; transition:opacity .25s; }
+  #present-toolbar.idle { opacity:0.15; }
+  #present-toolbar:hover { opacity:1; }
+  #present-toolbar button { background:transparent; border:none; color:#f5f7ff; padding:8px 14px; border-radius:999px; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-family:inherit; }
+  #present-toolbar button:hover { background:rgba(91,139,255,0.18); }
+  #present-toolbar button.active { background:linear-gradient(135deg,#2e6bff,#5b8bff); }
+  #present-toolbar svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  @media print { #present-toolbar { display:none !important; } }
+</style>
+</head>
+<body>
+
+<script type="application/json" id="speaker-notes">[]</script>
+
+<deck-stage>
+
+<!-- ============ 01 COVER ============ -->
+<section data-screen-label="01 Cover">
+  <div class="slide bg-grid bg-glow" style="display:flex; flex-direction:column; justify-content:space-between;">
+    <div class="chrome top" style="position:static; padding:0;">
+      <div class="logo">
+        <span class="logo-mark">
+          <svg viewBox="0 0 32 32"><defs><linearGradient id="lg1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#2e6bff"/></linearGradient></defs>
+          <circle cx="16" cy="16" r="14" fill="none" stroke="url(#lg1)" stroke-width="1.6"/>
+          <ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="url(#lg1)" stroke-width="1.6"/>
+          <ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="url(#lg1)" stroke-width="1.6"/>
+          <circle cx="16" cy="16" r="2.2" fill="#5b8bff"/>
+          </svg>
+        </span>
+        <span>GLOBETEC</span>
+      </div>
+      <span class="chip"><span class="dot"></span> globetecrd.com</span>
+    </div>
+
+    <div>
+      <div class="eyebrow" style="margin-bottom:28px;">Agencia digital · WordPress · IA · Automatización</div>
+      <h1 class="title">
+        Llevamos tu web<br/>
+        <span class="grad-text">al siguiente nivel.</span>
+      </h1>
+      <p style="max-width:780px; font-size:24px; color:var(--ink-dim); margin-top:36px;">
+        Diseño, mantenimiento, SEO, recuperación de WordPress y automatización con IA. Una sola alianza para crecer tu negocio online.
+      </p>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+      <div style="display:flex; gap:12px;">
+        <span class="chip">Diseño Web</span>
+        <span class="chip">Mantenimiento</span>
+        <span class="chip">SEO</span>
+        <span class="chip">Bug Fix</span>
+        <span class="chip">AI Chatbots</span>
+        <span class="chip">Automation</span>
+      </div>
+      <div class="mono" style="font-size:13px; color:var(--ink-mute);">PRESENTACIÓN CORPORATIVA · 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 SOBRE NOSOTROS ============ -->
+<section data-screen-label="02 Sobre Nosotros">
+  <div class="slide bg-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:80px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">02 · SOBRE NOSOTROS</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:24px;">Sobre nosotros</div>
+      <h2 class="title">Más que código.<br/><span class="grad-text">Socios de tu crecimiento.</span></h2>
+      <p style="font-size:22px; color:var(--ink-dim); margin-top:32px; max-width:560px;">
+        Somos un equipo de ingenieros, diseñadores y estrategas digitales con <b style="color:var(--ink);">+4 años</b> ayudando a empresas a vender más online — desde startups locales hasta marcas regionales.
+      </p>
+      <div style="display:flex; gap:48px; margin-top:48px;">
+        <div><div class="stat-n grad-text">120+</div><div class="stat-l">Proyectos entregados</div></div>
+        <div><div class="stat-n grad-text">50+</div><div class="stat-l">Partners activos</div></div>
+        <div><div class="stat-n grad-text">24/7</div><div class="stat-l">Soporte continuo</div></div>
+      </div>
+    </div>
+
+    <div style="align-self:center; display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+      <div class="card" style="grid-column: span 2;">
+        <div class="num">/ EQUIPO</div>
+        <h3 style="font-family:'Space Grotesk'; font-size:28px; margin:12px 0 8px; font-weight:600;">Especialistas, no generalistas</h3>
+        <p style="color:var(--ink-dim); margin:0;">Cada vertical de servicio cuenta con un líder técnico dedicado: diseño, performance, seguridad y automatización con IA.</p>
+      </div>
+      <div class="card">
+        <div class="num">/ STACK</div>
+        <h3 style="font-family:'Space Grotesk'; font-size:22px; margin:10px 0 0; font-weight:600;">WordPress + código puro</h3>
+        <p style="color:var(--ink-dim); margin-top:8px; font-size:15px;">Elegimos la herramienta correcta para cada caso.</p>
+      </div>
+      <div class="card">
+        <div class="num">/ ENFOQUE</div>
+        <h3 style="font-family:'Space Grotesk'; font-size:22px; margin:10px 0 0; font-weight:600;">Conversión ante todo</h3>
+        <p style="color:var(--ink-dim); margin-top:8px; font-size:15px;">Diseñamos para resultados de negocio medibles.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 VISION + MISION ============ -->
+<section data-screen-label="03 Visión y Misión">
+  <div class="slide bg-glow" style="display:flex; flex-direction:column;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">03 · VISIÓN Y MISIÓN</span></div>
+
+    <div style="margin-top:60px;"><div class="eyebrow">Lo que nos mueve</div></div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:32px; margin-top:48px; flex:1;">
+      <div class="card" style="padding:56px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+            <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg></div>
+            <div class="display" style="font-size:32px;">Misión</div>
+          </div>
+          <p class="display" style="font-size:42px; line-height:1.15; margin:0;">
+            Impulsar a las <span class="grad-text">empresas a vender más online</span> entregando tecnología web confiable, segura y orientada a conversión.
+          </p>
+        </div>
+        <div class="mono" style="color:var(--ink-mute); font-size:13px; margin-top:32px;">— Construir, mantener, automatizar.</div>
+      </div>
+
+      <div class="card" style="padding:56px; background:linear-gradient(180deg, rgba(46,107,255,0.18), rgba(91,139,255,0.04)); border-color: rgba(91,139,255,0.4); display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12c4-6 14-6 18 0-4 6-14 6-18 0z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="display" style="font-size:32px;">Visión</div>
+          </div>
+          <p class="display" style="font-size:42px; line-height:1.15; margin:0;">
+            Ser la <span class="grad-text">aliada tecnológica regional #1</span> para negocios que viven y crecen en internet.
+          </p>
+        </div>
+        <div class="mono" style="color:var(--ink-mute); font-size:13px; margin-top:32px;">— Latinoamérica · 2030</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 SERVICIOS OVERVIEW ============ -->
+<section data-screen-label="04 Servicios">
+  <div class="slide bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">04 · SERVICIOS</span></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px;">Lo que hacemos</div>
+        <h2 class="title">Seis servicios.<br/><span class="grad-text">Un solo equipo.</span></h2>
+      </div>
+      <p style="color:var(--ink-dim); max-width:380px; font-size:18px;">Cada servicio puede contratarse por separado o como ecosistema completo de crecimiento digital.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap:20px; height:55%;">
+      <!-- Diseño Web -->
+      <div class="card" style="padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18"/><circle cx="6" cy="6" r="0.6" fill="currentColor"/><circle cx="8.5" cy="6" r="0.6" fill="currentColor"/></svg></div>
+          <span class="mono" style="color:var(--blue-2); font-size:13px;">01</span>
+        </div>
+        <div>
+          <h4 class="display" style="font-size:26px; margin:0 0 8px;">Diseño Web</h4>
+          <p style="color:var(--ink-dim); font-size:14px; margin:0;">Sitios modernos, rápidos y full responsive que convierten visitantes en clientes.</p>
+        </div>
+      </div>
+      <!-- Mantenimiento -->
+      <div class="card" style="padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 1 0 3 3l3.3 3.3-1.4 1.4-3.3-3.3a4 4 0 0 1-3-3z"/><path d="M11 11l-6 6 2 2 6-6"/></svg></div>
+          <span class="mono" style="color:var(--blue-2); font-size:13px;">02</span>
+        </div>
+        <div>
+          <h4 class="display" style="font-size:26px; margin:0 0 8px;">Mantenimiento Web</h4>
+          <p style="color:var(--ink-dim); font-size:14px; margin:0;">Tu sitio seguro y operativo 24/7. Actualizaciones, optimización y protección.</p>
+        </div>
+      </div>
+      <!-- SEO -->
+      <div class="card" style="padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/><path d="M8 11h6M11 8v6"/></svg></div>
+          <span class="mono" style="color:var(--blue-2); font-size:13px;">03</span>
+        </div>
+        <div>
+          <h4 class="display" style="font-size:26px; margin:0 0 8px;">Posicionamiento SEO</h4>
+          <p style="color:var(--ink-dim); font-size:14px; margin:0;">Más visibilidad en Google y más tráfico cualificado a tu negocio.</p>
+        </div>
+      </div>
+      <!-- WP Bug Fix -->
+      <div class="card" style="padding:28px; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(180deg, rgba(46,107,255,0.18), rgba(91,139,255,0.04)); border-color: rgba(91,139,255,0.4);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M8 4l-2 4h12l-2-4M4 8h16v4a8 8 0 1 1-16 0z"/><path d="M9 14v3M15 14v3"/></svg></div>
+          <span class="mono" style="color:var(--blue-2); font-size:13px;">04</span>
+        </div>
+        <div>
+          <h4 class="display" style="font-size:26px; margin:0 0 8px;">WordPress Bug Fix</h4>
+          <p style="color:var(--ink-dim); font-size:14px; margin:0;">Recuperamos sitios WP hackeados o caídos en un promedio de 2 días.</p>
+        </div>
+      </div>
+      <!-- AI -->
+      <div class="card" style="padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1.2" fill="currentColor"/><circle cx="15" cy="12" r="1.2" fill="currentColor"/><path d="M12 2v4M8 18l-2 3M16 18l2 3"/></svg></div>
+          <span class="mono" style="color:var(--blue-2); font-size:13px;">05</span>
+        </div>
+        <div>
+          <h4 class="display" style="font-size:26px; margin:0 0 8px;">AI Chatbots</h4>
+          <p style="color:var(--ink-dim); font-size:14px; margin:0;">Atención automatizada 24/7 con IA que entiende y convierte.</p>
+        </div>
+      </div>
+      <!-- Flow -->
+      <div class="card" style="padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 6h10M6 8l5 8M18 8l-5 8"/></svg></div>
+          <span class="mono" style="color:var(--blue-2); font-size:13px;">06</span>
+        </div>
+        <div>
+          <h4 class="display" style="font-size:26px; margin:0 0 8px;">Flow Automation</h4>
+          <p style="color:var(--ink-dim); font-size:14px; margin:0;">Automatizamos procesos web. Reduce costos hasta 40%.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 DISEÑO WEB ============ -->
+<section data-screen-label="05 Diseño Web">
+  <div class="slide bg-grid" style="display:grid; grid-template-columns: 1.05fr 1fr; gap:64px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">05 · DISEÑO WEB</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:18px;">/ 01 · Diseño Web</div>
+      <h2 class="title">Sitios que<br/><span class="grad-text">venden mientras duermes.</span></h2>
+      <p style="font-size:22px; color:var(--ink-dim); margin-top:28px; max-width:560px;">
+        Diseñamos experiencias web que cargan en menos de 2s, se ven impecables en cualquier dispositivo y están optimizadas para buscadores <i>y</i> para que las IA recomienden tu marca.
+      </p>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:36px;">
+        <div class="card" style="padding:20px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">/ RESPONSIVE</div>
+          <div style="font-weight:600; margin-top:6px;">Full responsive</div>
+          <div style="color:var(--ink-dim); font-size:14px;">Desktop · tablet · móvil · pantallas grandes</div>
+        </div>
+        <div class="card" style="padding:20px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">/ SEO + AEO</div>
+          <div style="font-weight:600; margin-top:6px;">Optimizado para Google e IA</div>
+          <div style="color:var(--ink-dim); font-size:14px;">Indexable, schema, snippets, AEO</div>
+        </div>
+        <div class="card" style="padding:20px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">/ STACK</div>
+          <div style="font-weight:600; margin-top:6px;">WordPress o código puro</div>
+          <div style="color:var(--ink-dim); font-size:14px;">Elegimos según tu objetivo</div>
+        </div>
+        <div class="card" style="padding:20px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">/ PERFORMANCE</div>
+          <div style="font-weight:600; margin-top:6px;">Core Web Vitals en verde</div>
+          <div style="color:var(--ink-dim); font-size:14px;">Velocidad = conversión</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="align-self:center;">
+      <!-- Mock browser preview -->
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--line);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#ffbd2e;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#28c840;"></span>
+          <div class="mono" style="font-size:12px; color:var(--ink-mute); margin-left:14px;">globetecrd.com/portfolio</div>
+        </div>
+        <div style="padding:24px; display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+          <div style="aspect-ratio: 4/3; background:linear-gradient(135deg, rgba(46,107,255,0.5), rgba(91,139,255,0.1)); border-radius:10px; display:grid; place-items:center;">
+            <div style="font-family:'Space Grotesk'; font-weight:700; font-size:22px;">Hero <span style="color:var(--cyan)">→</span></div>
+          </div>
+          <div class="ph" style="aspect-ratio: 4/3;">PRODUCT SHOT</div>
+          <div class="ph" style="aspect-ratio: 4/3;">FEATURE GRID</div>
+          <div style="aspect-ratio: 4/3; background:#0b1430; border:1px solid var(--line-2); border-radius:10px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div class="mono" style="font-size:10px; color:var(--blue-2);">LCP · 1.4s</div>
+            <div class="display" style="font-size:32px;">98<span style="font-size:16px; color:var(--ink-dim)"> /100</span></div>
+            <div style="font-size:11px; color:var(--ink-dim);">Performance score</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client logos placeholder -->
+      <div style="margin-top:28px;">
+        <div class="mono" style="font-size:12px; color:var(--ink-mute); margin-bottom:12px;">— CLIENTES QUE CONFÍAN EN NOSOTROS</div>
+        <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:10px;">
+          <div style="height:60px; background:rgba(255,255,255,0.03); border:1px solid var(--line-2); border-radius:10px; display:grid; place-items:center; padding:10px;">
+            <img src="https://globetecrd.com/assets/img/home-1/brand/carzone-logo-2.png" style="max-width:100%; max-height:100%; object-fit:contain;">
+          </div>
+          <div style="height:60px; background:rgba(255,255,255,0.03); border:1px solid var(--line-2); border-radius:10px; display:grid; place-items:center; padding:10px;">
+            <img src="https://globetecrd.com/assets/img/home-1/brand/LOGOM-UAFAM-17-9-20211-1.png" style="max-width:100%; max-height:100%; object-fit:contain;">
+          </div>
+          <div style="height:60px; background:rgba(255,255,255,0.03); border:1px solid var(--line-2); border-radius:10px; display:grid; place-items:center; padding:10px;">
+            <img src="https://globetecrd.com/assets/img/home-1/brand/igtec-1.png" style="max-width:100%; max-height:100%; object-fit:contain;">
+          </div>
+          <div style="height:60px; background:rgba(255,255,255,0.03); border:1px solid var(--line-2); border-radius:10px; display:grid; place-items:center; padding:10px;">
+            <img src="https://globetecrd.com/assets/img/home-1/brand/logo-conexion-header.png" style="max-width:100%; max-height:100%; object-fit:contain;">
+          </div>
+          <div style="height:60px; background:rgba(255,255,255,0.03); border:1px solid var(--line-2); border-radius:10px; display:grid; place-items:center; padding:10px;">
+            <img src="https://globetecrd.com/assets/img/home-1/brand/ig-logo-mobile3.png" style="max-width:100%; max-height:100%; object-fit:contain;">
+          </div>
+          <div style="height:60px; background:rgba(255,255,255,0.03); border:1px solid var(--line-2); border-radius:10px; display:grid; place-items:center; padding:10px;">
+            <img src="https://globetecrd.com/assets/img/home-1/brand/logo-plaintext-3.png" style="max-width:100%; max-height:100%; object-fit:contain;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 MANTENIMIENTO WEB ============ -->
+<section data-screen-label="06 Mantenimiento Web">
+  <div class="slide bg-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:56px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">06 · MANTENIMIENTO WEB</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:18px;">/ 02 · Mantenimiento Web</div>
+      <h2 class="title">Tu sitio,<br/>operativo<br/><span class="grad-text">24/7. Sin excusas.</span></h2>
+      <p style="font-size:21px; color:var(--ink-dim); margin-top:28px; max-width:520px;">
+        Ayudamos a empresas a mantener su sitio web <b style="color:var(--ink);">operativo las 24 horas, los 7 días de la semana</b>. Monitoreo activo, parches de seguridad, backups y respuesta inmediata ante caídas.
+      </p>
+
+      <div style="display:flex; gap:32px; margin-top:36px;">
+        <div><div class="stat-n grad-text" style="font-size:56px;">99.9%</div><div class="stat-l">Uptime garantizado</div></div>
+        <div><div class="stat-n grad-text" style="font-size:56px;">&lt;15m</div><div class="stat-l">Tiempo de respuesta</div></div>
+        <div><div class="stat-n grad-text" style="font-size:56px;">∞</div><div class="stat-l">Backups versionados</div></div>
+      </div>
+    </div>
+
+    <div style="align-self:center; display:flex; flex-direction:column; gap:18px;">
+      <!-- Sectors -->
+      <div class="card">
+        <div class="mono" style="color:var(--blue-2); font-size:12px;">/ SECTORES QUE MÁS LO NECESITAN</div>
+        <div style="font-size:15px; color:var(--ink-dim); margin-top:6px;">Por cumplimiento normativo o por el volumen de ataques que reciben.</div>
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top:18px;">
+          <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(255,255,255,0.03); border-radius:10px;">
+            <div class="ico" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div>
+            <div><div style="font-weight:600;">Gobierno</div><div style="color:var(--ink-mute); font-size:12px;">Cumplimiento + alta exposición</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(255,255,255,0.03); border-radius:10px;">
+            <div class="ico" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 6l9-3 9 3M7 12h6M7 16h10"/></svg></div>
+            <div><div style="font-weight:600;">Blogs de noticias</div><div style="color:var(--ink-mute); font-size:12px;">Tráfico alto · contenido sensible</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(255,255,255,0.03); border-radius:10px;">
+            <div class="ico" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;"><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/><path d="M3 4h3l2 12h11l2-8H7"/></svg></div>
+            <div><div style="font-weight:600;">Ecommerce</div><div style="color:var(--ink-mute); font-size:12px;">Cada minuto offline = $$ perdido</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(255,255,255,0.03); border-radius:10px;">
+            <div class="ico" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;"><path d="M3 10l9-6 9 6v2H3z"/><path d="M5 12v6M11 12v6M17 12v6M3 20h18"/></svg></div>
+            <div><div style="font-weight:600;">Bancos &amp; Fintech</div><div style="color:var(--ink-mute); font-size:12px;">Regulación + ataques constantes</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI Calculator (interactive) -->
+      <div class="card roi-calc" style="background:linear-gradient(180deg, rgba(46,107,255,0.22), rgba(91,139,255,0.04)); border-color:rgba(91,139,255,0.4); padding:22px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="mono" style="color:var(--cyan); font-size:12px;">/ CALCULADORA DE ROI · ANUAL ESTIMADO</div>
+          <div class="mono" style="font-size:10px; color:var(--ink-mute);">● AJUSTABLE EN VIVO</div>
+        </div>
+
+        <!-- Controls -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:14px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span class="mono" style="font-size:10px; color:var(--ink-dim); letter-spacing:0.1em;">PLAN MENSUAL</span>
+              <span class="mono" style="font-size:13px; color:var(--cyan); font-weight:600;">$<span data-roi="plan-val">100</span> USD</span>
+            </div>
+            <input type="range" data-roi="plan" min="50" max="1000" step="10" value="100" />
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span class="mono" style="font-size:10px; color:var(--ink-dim); letter-spacing:0.1em;">EQUIPO QUE GESTIONA LA WEB</span>
+              <span class="mono" style="font-size:13px; color:var(--cyan); font-weight:600;"><span data-roi="team-val">3</span> personas</span>
+            </div>
+            <input type="range" data-roi="team" min="1" max="30" step="1" value="3" />
+          </div>
+        </div>
+
+        <!-- Business type -->
+        <div style="margin-top:12px;">
+          <div class="mono" style="font-size:10px; color:var(--ink-dim); margin-bottom:8px; letter-spacing:0.1em;">TIPO DE NEGOCIO</div>
+          <div data-roi="pills" style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button data-t="info" class="tp">Web informativa</button>
+            <button data-t="services" class="tp">Servicios pro</button>
+            <button data-t="ecommerce" class="tp active">Ecommerce</button>
+            <button data-t="finance" class="tp">Banca / Gobierno</button>
+          </div>
+        </div>
+
+        <!-- Outputs -->
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(91,139,255,0.25);">
+          <div>
+            <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">INVERSIÓN ANUAL</div>
+            <div class="display" data-roi="o-invest" style="font-size:26px; margin-top:2px;">$1,200</div>
+          </div>
+          <div>
+            <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">RIESGO EVITADO</div>
+            <div class="display" data-roi="o-benefit" style="font-size:26px; margin-top:2px;">$24K</div>
+          </div>
+          <div>
+            <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">ROI MÚLTIPLO</div>
+            <div class="display" data-roi="o-mul" style="font-size:26px; margin-top:2px;">20×</div>
+          </div>
+          <div>
+            <div style="font-size:10px; color:var(--ink-mute); letter-spacing:0.08em;">RETORNO NETO</div>
+            <div class="display grad-text" data-roi="o-pct" style="font-size:26px; margin-top:2px;">+1900%</div>
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:10px;">
+          <div class="bd" data-src="Sucuri / SiteLock 2024 · costo promedio de limpieza profesional de WP comprometido $1.5K–$5K. Frecuencia: ~1.4 ataques/año en sitios activos."><div class="bd-l">Recuperación post-incidente</div><div class="bd-v mono" data-roi="b-rec">$7K</div></div>
+          <div class="bd" data-src="Gartner 2024 · IT downtime SMB $50K–$100K/hr en e-commerce. Atlassian/Ponemon: $137–$427/min pequeñas empresas. Cálculo basado en ~4 días sin recuperación especializada."><div class="bd-l">Downtime evitado</div><div class="bd-v mono" data-roi="b-down">$16K</div></div>
+          <div class="bd" data-src="IBM Cost of a Data Breach 2024 · pérdida de negocio = mayor componente del costo. 70% reporta disrupción significativa. 60% de SMB cierran a los 6 meses de un ataque (Inc.com)."><div class="bd-l">Reputación &amp; confianza</div><div class="bd-v mono" data-roi="b-rep">$8K</div></div>
+          <div class="bd" data-src="BLS 2025 · costo laboral promedio $47.92/hr en industria privada. Estimación conservadora: 10 hrs/mes por persona en mantenimiento web manual a $25/hr."><div class="bd-l">Horas de equipo ahorradas</div><div class="bd-v mono" data-roi="b-team">$8K</div></div>
+        </div>
+
+        <div style="margin-top:12px; padding:12px 14px; background:rgba(91,139,255,0.08); border-left:3px solid var(--cyan); border-radius:8px; font-size:12.5px; color:var(--ink); line-height:1.5;">
+          <span style="color:var(--cyan); font-weight:600;">★ Cifras basadas en informes públicos.</span> <b style="color:var(--cyan);">Tu web es la primera cara de tu empresa en internet</b> — protegerla blinda tu marca, no solo tus ventas.
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+            <span class="src">IBM · Cost of a Data Breach 2024</span>
+            <span class="src">Ponemon Institute</span>
+            <span class="src">Gartner · IT Downtime 2024</span>
+            <span class="src">ITIC · Hourly Cost of Downtime</span>
+            <span class="src">Inc.com / SiteLock SMB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 SEO ============ -->
+<section data-screen-label="07 SEO">
+  <div class="slide bg-grid bg-glow" style="display:grid; grid-template-columns: 1fr 1fr; gap:56px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">07 · POSICIONAMIENTO SEO</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:18px;">/ 03 · Posicionamiento SEO</div>
+      <h2 class="title">Aparece donde<br/><span class="grad-text">te están buscando.</span></h2>
+      <p style="font-size:21px; color:var(--ink-dim); margin-top:28px; max-width:560px;">
+        Si no estás en la <b style="color:var(--ink);">primera página de Google</b> — no existes. Combinamos SEO técnico, contenido estratégico y autoridad de dominio para llevarte al top 3.
+      </p>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:32px;">
+        <div class="card" style="padding:18px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">01 · AUDITORÍA</div>
+          <div style="font-weight:600; margin-top:6px;">Diagnóstico técnico 360°</div>
+        </div>
+        <div class="card" style="padding:18px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">02 · KEYWORDS</div>
+          <div style="font-weight:600; margin-top:6px;">Investigación de alta intención</div>
+        </div>
+        <div class="card" style="padding:18px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">03 · ON-PAGE</div>
+          <div style="font-weight:600; margin-top:6px;">Optimización + schema + AEO</div>
+        </div>
+        <div class="card" style="padding:18px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px;">04 · OFF-PAGE</div>
+          <div style="font-weight:600; margin-top:6px;">Backlinks de autoridad</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="align-self:center;">
+      <!-- SERP mock -->
+      <div class="card" style="padding:28px;">
+        <div class="mono" style="font-size:12px; color:var(--ink-mute); margin-bottom:14px;">RESULTADOS · GOOGLE</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:14px; align-items:center; padding:14px; background:rgba(46,107,255,0.12); border-radius:12px; border:1px solid rgba(91,139,255,0.35);">
+            <div class="display" style="font-size:38px; min-width:60px;">#1</div>
+            <div style="flex:1;">
+              <div style="color:var(--cyan); font-size:14px;">tucliente.com › servicios</div>
+              <div style="font-weight:600;">El servicio #1 en [tu ciudad] — 2026</div>
+              <div style="color:var(--ink-dim); font-size:13px;">Convierte 4.2× más que el promedio del sector.</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:14px; align-items:center; padding:14px; opacity:0.6;">
+            <div class="display" style="font-size:32px; min-width:60px; color:var(--ink-mute);">#2</div>
+            <div style="flex:1;"><div style="color:var(--ink-mute); font-size:14px;">competidor-1.com</div><div style="font-weight:600; color:var(--ink-dim);">Competidor común</div></div>
+          </div>
+          <div style="display:flex; gap:14px; align-items:center; padding:14px; opacity:0.4;">
+            <div class="display" style="font-size:32px; min-width:60px; color:var(--ink-mute);">#3</div>
+            <div style="flex:1;"><div style="color:var(--ink-mute); font-size:14px;">competidor-2.com</div><div style="font-weight:600; color:var(--ink-dim);">Otro competidor</div></div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:24px;">
+          <div><div class="display grad-text" style="font-size:42px;">+312%</div><div style="color:var(--ink-dim); font-size:12px;">Tráfico orgánico promedio</div></div>
+          <div><div class="display grad-text" style="font-size:42px;">90d</div><div style="color:var(--ink-dim); font-size:12px;">Primeros resultados</div></div>
+          <div><div class="display grad-text" style="font-size:42px;">Top 3</div><div style="color:var(--ink-dim); font-size:12px;">Keywords objetivo</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 WP BUG FIX ============ -->
+<section data-screen-label="08 WordPress Bug Fix">
+  <div class="slide bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">08 · WORDPRESS BUG FIX</span></div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:48px; margin-top:30px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:18px;">/ 04 · WordPress Bug Fix</div>
+        <h2 class="title" style="font-size:80px;">¿Hackeado?<br/><span class="grad-text">Lo recuperamos.</span></h2>
+        <p style="font-size:21px; color:var(--ink-dim); margin-top:24px; max-width:540px;">
+          Ayudamos a empresas a <b style="color:var(--ink);">recuperar su sitio WordPress hackeado</b>. Contamos con tecnología especializada para detectar, contener y eliminar amenazas a nivel de código.
+        </p>
+
+        <div style="display:flex; gap:32px; margin-top:32px;">
+          <div><div class="stat-n grad-text" style="font-size:64px;">~2</div><div class="stat-l">Días promedio de recuperación</div></div>
+          <div><div class="stat-n grad-text" style="font-size:64px;">100%</div><div class="stat-l">Limpieza de raíz garantizada</div></div>
+        </div>
+
+        <div class="card" style="margin-top:28px; background:linear-gradient(180deg, rgba(46,107,255,0.16), rgba(91,139,255,0.02)); border-color:rgba(91,139,255,0.35);">
+          <div class="mono" style="color:var(--cyan); font-size:12px;">/ TECH STACK ESPECIALIZADO</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+            <span class="chip">Forense de archivos</span>
+            <span class="chip">Integrity scan</span>
+            <span class="chip">Plugin diff</span>
+            <span class="chip">Hash matching</span>
+            <span class="chip">Sandbox aislado</span>
+            <span class="chip">WAF + Hardening</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Process -->
+      <div>
+        <div class="mono" style="color:var(--blue-2); font-size:13px; margin-bottom:18px;">/ NUESTRO PROCESO · 4 ETAPAS</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="card" style="padding:22px; display:grid; grid-template-columns: 60px 1fr; gap:18px; align-items:center;">
+            <div class="display grad-text" style="font-size:48px;">01</div>
+            <div>
+              <div class="display" style="font-size:22px; font-weight:600;">Migración a instancia aislada</div>
+              <div style="color:var(--ink-dim); font-size:15px; margin-top:4px;">Movemos tu sitio a nuestras instancias seguras para trabajar sin afectar el servicio actual.</div>
+            </div>
+          </div>
+          <div class="card" style="padding:22px; display:grid; grid-template-columns: 60px 1fr; gap:18px; align-items:center;">
+            <div class="display grad-text" style="font-size:48px;">02</div>
+            <div>
+              <div class="display" style="font-size:22px; font-weight:600;">Análisis forense de código</div>
+              <div style="color:var(--ink-dim); font-size:15px; margin-top:4px;">Revisamos integridad de archivos, plugins desactualizados, inyecciones y puertas traseras.</div>
+            </div>
+          </div>
+          <div class="card" style="padding:22px; display:grid; grid-template-columns: 60px 1fr; gap:18px; align-items:center;">
+            <div class="display grad-text" style="font-size:48px;">03</div>
+            <div>
+              <div class="display" style="font-size:22px; font-weight:600;">Eliminación de raíz &amp; parcheo</div>
+              <div style="color:var(--ink-dim); font-size:15px; margin-top:4px;">Damos con el problema, lo eliminamos por completo y aplicamos parches para que no vuelva.</div>
+            </div>
+          </div>
+          <div class="card" style="padding:22px; display:grid; grid-template-columns: 60px 1fr; gap:18px; align-items:center; background:linear-gradient(180deg, rgba(46,107,255,0.18), rgba(91,139,255,0.04)); border-color:rgba(91,139,255,0.4);">
+            <div class="display grad-text" style="font-size:48px;">04</div>
+            <div>
+              <div class="display" style="font-size:22px; font-weight:600;">Entrega limpia y blindada</div>
+              <div style="color:var(--ink-dim); font-size:15px; margin-top:4px;">Devolvemos el sitio totalmente limpio, con reporte de hallazgos y recomendaciones de hardening.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 AI CHATBOTS ============ -->
+<section data-screen-label="09 AI Chatbots">
+  <div class="slide bg-grid bg-glow" style="display:grid; grid-template-columns: 1fr 1fr; gap:64px;">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">09 · AI CHATBOTS</span></div>
+
+    <div style="align-self:center;">
+      <div class="eyebrow" style="margin-bottom:18px;">/ 05 · AI Chatbots</div>
+      <h2 class="title">Un agente IA<br/>que <span class="grad-text">vende por ti.</span></h2>
+      <p style="font-size:21px; color:var(--ink-dim); margin-top:28px; max-width:520px;">
+        Implementamos chatbots inteligentes entrenados con <b style="color:var(--ink);">tu marca, tu catálogo y tu tono</b>. Captan leads, califican prospectos y agendan reuniones — mientras tú duermes.
+      </p>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:36px;">
+        <div class="card" style="padding:22px;"><div class="display grad-text" style="font-size:42px;">24/7</div><div style="color:var(--ink-dim); font-size:14px;">Disponibilidad total</div></div>
+        <div class="card" style="padding:22px;"><div class="display grad-text" style="font-size:42px;">−68%</div><div style="color:var(--ink-dim); font-size:14px;">Costo de atención</div></div>
+        <div class="card" style="padding:22px;"><div class="display grad-text" style="font-size:42px;">3.4×</div><div style="color:var(--ink-dim); font-size:14px;">Más leads calificados</div></div>
+        <div class="card" style="padding:22px;"><div class="display grad-text" style="font-size:42px;">+40</div><div style="color:var(--ink-dim); font-size:14px;">Idiomas soportados</div></div>
+      </div>
+    </div>
+
+    <!-- Chat mock -->
+    <div style="align-self:center;">
+      <div class="card" style="padding:24px;">
+        <div style="display:flex; align-items:center; gap:12px; padding-bottom:16px; border-bottom:1px solid var(--line);">
+          <div class="ico" style="width:42px;height:42px;border-radius:12px;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;"><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1.2" fill="currentColor"/><circle cx="15" cy="12" r="1.2" fill="currentColor"/></svg></div>
+          <div>
+            <div style="font-weight:600;">Aida · Asistente Globetec</div>
+            <div style="font-size:12px; color:var(--cyan);">● En línea — responde en &lt; 1s</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; padding-top:18px;">
+          <div style="align-self:flex-start; max-width:80%; background:#11192d; padding:12px 16px; border-radius:16px 16px 16px 4px; font-size:15px;">Hola 👋 ¿En qué te puedo ayudar hoy?</div>
+          <div style="align-self:flex-end; max-width:75%; background:linear-gradient(135deg,#2e6bff,#5b8bff); color:#fff; padding:12px 16px; border-radius:16px 16px 4px 16px; font-size:15px;">Necesito una web para mi clínica dental</div>
+          <div style="align-self:flex-start; max-width:85%; background:#11192d; padding:12px 16px; border-radius:16px 16px 16px 4px; font-size:15px;">Perfecto. Tenemos un plan especial para clínicas que incluye reservas online ¿Te agendo una demo gratuita esta semana?</div>
+          <div style="align-self:flex-start; display:flex; gap:8px;">
+            <span class="chip" style="background:rgba(46,107,255,0.18); border-color:rgba(91,139,255,0.4); color:var(--cyan);">Sí, esta semana</span>
+            <span class="chip">Otra fecha</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 FLOW AUTOMATION ============ -->
+<section data-screen-label="10 Flow Automation">
+  <div class="slide bg-grid">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">10 · FLOW AUTOMATION</span></div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1.1fr; gap:56px; margin-top:30px;">
+      <div style="align-self:center;">
+        <div class="eyebrow" style="margin-bottom:18px;">/ 06 · Flow Automation</div>
+        <h2 class="title">Automatiza<br/>todo lo<br/><span class="grad-text">repetitivo.</span></h2>
+        <p style="font-size:21px; color:var(--ink-dim); margin-top:28px; max-width:520px;">
+          Conectamos tu web, CRM, email, WhatsApp y plataformas de pago en flujos inteligentes que trabajan 24/7. Menos tareas manuales, más resultados.
+        </p>
+
+        <div style="margin-top:36px; padding:24px 28px; background:linear-gradient(135deg, rgba(46,107,255,0.22), rgba(91,139,255,0.04)); border:1px solid rgba(91,139,255,0.4); border-radius:18px;">
+          <div class="mono" style="color:var(--cyan); font-size:12px;">/ IMPACTO</div>
+          <div class="display" style="font-size:64px; line-height:1; margin-top:8px;">
+            <span class="grad-text">−40%</span>
+          </div>
+          <div style="color:var(--ink-dim); font-size:16px; margin-top:6px;">de costos operativos con automatización inteligente</div>
+        </div>
+      </div>
+
+      <!-- Workflow visualization -->
+      <div style="align-self:center;">
+        <div class="card" style="padding:36px;">
+          <div class="mono" style="color:var(--blue-2); font-size:12px; margin-bottom:24px;">/ EJEMPLO DE WORKFLOW</div>
+          <svg viewBox="0 0 480 360" style="width:100%; height:auto;">
+            <defs>
+              <linearGradient id="ln" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#7cd4ff"/></linearGradient>
+              <marker id="arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7cd4ff"/></marker>
+            </defs>
+            <!-- Connections -->
+            <path d="M90 60 C 180 60, 180 180, 240 180" stroke="url(#ln)" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+            <path d="M90 180 L 230 180" stroke="url(#ln)" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+            <path d="M90 300 C 180 300, 180 180, 230 180" stroke="url(#ln)" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+            <path d="M310 180 L 380 80" stroke="url(#ln)" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+            <path d="M310 180 L 380 180" stroke="url(#ln)" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+            <path d="M310 180 L 380 280" stroke="url(#ln)" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+            <!-- Input nodes -->
+            <g><rect x="10" y="40" width="80" height="40" rx="10" fill="#11192d" stroke="rgba(91,139,255,0.5)"/><text x="50" y="65" text-anchor="middle" fill="#f5f7ff" font-family="Inter" font-size="13">Formulario</text></g>
+            <g><rect x="10" y="160" width="80" height="40" rx="10" fill="#11192d" stroke="rgba(91,139,255,0.5)"/><text x="50" y="185" text-anchor="middle" fill="#f5f7ff" font-family="Inter" font-size="13">Checkout</text></g>
+            <g><rect x="10" y="280" width="80" height="40" rx="10" fill="#11192d" stroke="rgba(91,139,255,0.5)"/><text x="50" y="305" text-anchor="middle" fill="#f5f7ff" font-family="Inter" font-size="13">WhatsApp</text></g>
+
+            <!-- Brain -->
+            <g>
+              <circle cx="270" cy="180" r="42" fill="url(#ln)" opacity="0.18"/>
+              <circle cx="270" cy="180" r="42" fill="none" stroke="#7cd4ff" stroke-width="1.5"/>
+              <text x="270" y="176" text-anchor="middle" fill="#f5f7ff" font-family="Space Grotesk" font-size="14" font-weight="600">GLOBETEC</text>
+              <text x="270" y="194" text-anchor="middle" fill="#7cd4ff" font-family="JetBrains Mono" font-size="11">/engine</text>
+            </g>
+
+            <!-- Output nodes -->
+            <g><rect x="380" y="60" width="90" height="40" rx="10" fill="#11192d" stroke="rgba(91,139,255,0.5)"/><text x="425" y="85" text-anchor="middle" fill="#f5f7ff" font-family="Inter" font-size="13">CRM</text></g>
+            <g><rect x="380" y="160" width="90" height="40" rx="10" fill="#11192d" stroke="rgba(91,139,255,0.5)"/><text x="425" y="185" text-anchor="middle" fill="#f5f7ff" font-family="Inter" font-size="13">Email seq.</text></g>
+            <g><rect x="380" y="260" width="90" height="40" rx="10" fill="#11192d" stroke="rgba(91,139,255,0.5)"/><text x="425" y="285" text-anchor="middle" fill="#f5f7ff" font-family="Inter" font-size="13">Slack alert</text></g>
+          </svg>
+
+          <div style="display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;">
+            <span class="chip">SEO masivo</span>
+            <span class="chip">Lead scoring</span>
+            <span class="chip">Email + WhatsApp</span>
+            <span class="chip">Reportes auto</span>
+            <span class="chip">Estructura web</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 PARTNERS ============ -->
+<section data-screen-label="11 Programa de Alianzas">
+  <div class="slide bg-grid bg-glow">
+    <div class="chrome top"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="#5b8bff" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="#5b8bff" stroke-width="1.6"/></svg></span>GLOBETEC</div><span class="mono" style="color:var(--ink-mute); font-size:13px;">11 · PROGRAMA DE ALIANZAS</span></div>
+
+    <div>
+      <div class="eyebrow" style="margin-bottom:18px;">Crece con nosotros</div>
+      <h2 class="title" style="font-size:64px; line-height:1.02;">Hasta <span class="grad-text">30% de comisión</span> por cada referido.</h2>
+      <p style="font-size:19px; color:var(--ink-dim); margin-top:20px; max-width:780px;">
+        Únete a una red de agencias, hostings, afiliados y creadores que escalan con nuestras soluciones de WordPress y diseño web.
+      </p>
+    </div>
+
+    <!-- Stats row -->
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:18px; margin-top:28px;">
+      <div class="card" style="padding:20px;"><div class="display grad-text" style="font-size:48px;">50+</div><div style="color:var(--ink-dim); font-size:13px;">Partners activos</div></div>
+      <div class="card" style="padding:20px;"><div class="display grad-text" style="font-size:48px;">30%</div><div style="color:var(--ink-dim); font-size:13px;">Comisión media</div></div>
+      <div class="card" style="padding:20px;"><div class="display grad-text" style="font-size:48px;">24h</div><div style="color:var(--ink-dim); font-size:13px;">Tiempo de respuesta</div></div>
+      <div class="card" style="padding:20px;"><div class="display grad-text" style="font-size:48px;">4+</div><div style="color:var(--ink-dim); font-size:13px;">Años de trayectoria</div></div>
+    </div>
+
+    <!-- Partner types -->
+    <div style="margin-top:32px;">
+      <div class="mono" style="color:var(--blue-2); font-size:13px; margin-bottom:14px;">/ TIPOS DE ALIANZAS — Elige el modelo que mejor encaje contigo. Todos incluyen soporte directo, materiales y comisiones recurrentes.</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;">
+        <div class="card" style="padding:22px; background:linear-gradient(180deg, rgba(46,107,255,0.22), rgba(91,139,255,0.02)); border-color:rgba(91,139,255,0.5); position:relative;">
+          <span class="chip" style="position:absolute; top:-12px; right:18px; background:#2e6bff; color:#fff; border:none; font-weight:600;">Destacado</span>
+          <div class="ico" style="margin-bottom:14px;"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M14 20c0-2 2-3 4-3s4 1 4 3"/></svg></div>
+          <div class="display" style="font-size:22px;">Agencias</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:6px;">Revende servicios WordPress y escala sin aumentar nómina fija.</div>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div class="ico" style="margin-bottom:14px;"><svg viewBox="0 0 24 24"><path d="M4 6h16v4H4zM4 14h16v4H4z"/><circle cx="8" cy="8" r="0.8" fill="currentColor"/><circle cx="8" cy="16" r="0.8" fill="currentColor"/></svg></div>
+          <div class="display" style="font-size:22px;">Temas &amp; Plugins WP</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:6px;">Servicios profesionales para usuarios de tu producto WordPress.</div>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div class="ico" style="margin-bottom:14px;"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+          <div class="display" style="font-size:22px;">Proveedores de Hosting</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:6px;">Activa y retén más clientes con servicios de valor añadido.</div>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div class="ico" style="margin-bottom:14px;"><svg viewBox="0 0 24 24"><path d="M16 6l4 4-10 10H6v-4z"/><path d="M14 8l2 2"/></svg></div>
+          <div class="display" style="font-size:22px;">Afiliados</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:6px;">Promociona servicios WordPress y gana comisiones recurrentes.</div>
+        </div>
+        <div class="card" style="padding:22px; position:relative;">
+          <span class="chip" style="position:absolute; top:-12px; right:18px; background:#7cd4ff; color:#0a0f1f; border:none; font-weight:600;">Nuevo</span>
+          <div class="ico" style="margin-bottom:14px;"><svg viewBox="0 0 24 24"><path d="M4 6h12l4 4v8H4z"/><path d="M4 10h16M9 14h6"/></svg></div>
+          <div class="display" style="font-size:22px;">Colaboración de Contenido</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:6px;">Co-crea contenido con nosotros y potencia tu visibilidad.</div>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div class="ico" style="margin-bottom:14px;"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><circle cx="7" cy="14" r="1.2" fill="currentColor"/></svg></div>
+          <div class="display" style="font-size:22px;">WordPress Marca Blanca</div>
+          <div style="color:var(--ink-dim); font-size:14px; margin-top:6px;">Soluciones escalables y marca blanca para agencias.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 CTA CLOSING ============ -->
+<section data-screen-label="12 CTA Auditoría Gratis">
+  <div class="slide bg-grid bg-glow" style="display:flex; flex-direction:column; justify-content:space-between;">
+    <div class="chrome top" style="position:static; padding:0;"><div class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32"><defs><linearGradient id="lg2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#2e6bff"/></linearGradient></defs><circle cx="16" cy="16" r="14" fill="none" stroke="url(#lg2)" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="14" fill="none" stroke="url(#lg2)" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="14" ry="6" fill="none" stroke="url(#lg2)" stroke-width="1.6"/><circle cx="16" cy="16" r="2.2" fill="#5b8bff"/></svg></span>GLOBETEC</div><span class="chip"><span class="dot"></span>Próximo paso</span></div>
+
+    <div style="text-align:center;">
+      <div class="eyebrow" style="margin-bottom:24px;">Auditoría Gratuita</div>
+      <h1 class="title" style="font-size:130px;">
+        Descubre cómo<br/>
+        <span class="grad-text">tu web puede vender más.</span>
+      </h1>
+      <p style="font-size:26px; color:var(--ink-dim); margin:40px auto 0; max-width:820px;">
+        Solicita una <b style="color:var(--ink);">auditoría 100% gratuita</b> de tu sitio web. Te entregamos un informe con oportunidades reales de mejora — sin compromiso.
+      </p>
+
+      <div style="display:flex; gap:18px; justify-content:center; margin-top:48px;">
+        <a class="btn btn-primary" href="https://globetecrd.com" target="_blank" rel="noopener">
+          Solicitar auditoría gratis →
+        </a>
+        <span class="btn btn-ghost mono">globetecrd.com</span>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; gap:36px;">
+        <div><div class="mono" style="font-size:12px; color:var(--ink-mute);">SITIO</div><div style="font-weight:600; margin-top:4px;">globetecrd.com</div></div>
+        <div><div class="mono" style="font-size:12px; color:var(--ink-mute);">RESPUESTA</div><div style="font-weight:600; margin-top:4px;">&lt; 24 horas</div></div>
+        <div><div class="mono" style="font-size:12px; color:var(--ink-mute);">COSTO</div><div style="font-weight:600; margin-top:4px;">$0 USD</div></div>
+      </div>
+      <div class="mono" style="color:var(--ink-mute); font-size:13px;">© GLOBETEC · 2026</div>
+    </div>
+  </div>
+</section>
+
+</deck-stage>
+
+<!-- Presenter toolbar: fullscreen + hide current slide -->
+<div id="present-toolbar" role="toolbar" aria-label="Controles de presentación">
+  <button id="pt-fs" type="button" title="Pantalla completa (F)">
+    <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    <span id="pt-fs-label">Pantalla completa</span>
+  </button>
+  <button id="pt-skip" type="button" title="Ocultar este slide durante la presentación (H)">
+    <svg viewBox="0 0 24 24"><path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/></svg>
+    <span id="pt-skip-label">Ocultar slide</span>
+  </button>
+</div>
+
+<script>
+(function(){
+  /* ============ ROI CALCULATOR ============
+   * Sources (anual estimado · USD):
+   *   - IBM Cost of a Data Breach Report 2024 — costo medio global $4.88M;
+   *     70% sufre disrupción significativa; 60% de SMB cierran tras un ataque (Inc.com).
+   *   - Sucuri / SiteLock 2024 — limpieza profesional WP $1.5K–$5K, ~1.4 incidentes/año.
+   *   - Gartner 2024 — downtime SMB e-commerce $50K–$100K/hr; finanzas hasta $5M/hr.
+   *   - Atlassian / Ponemon — SMB $137–$427/min; lost business = mayor componente.
+   *   - ITIC 2024 — 90% reporta downtime > $300K/hr.
+   *   - BLS 2025 — compensación media privada $47.92/hr.
+   */
+  const TYPES = {
+    // recovery = limpieza profesional. downtimeDay = pérdida visible por día caído.
+    // reputation = pérdida de leads/clientes por desconfianza. fines = multas regulatorias.
+    info:      { recovery: 2500,  downtimeDay: 1200,  reputation: 4500,  fines: 0     },
+    services:  { recovery: 3500,  downtimeDay: 3500,  reputation: 9000,  fines: 0     },
+    ecommerce: { recovery: 5000,  downtimeDay: 12000, reputation: 18000, fines: 0     },
+    finance:   { recovery: 9000,  downtimeDay: 38000, reputation: 42000, fines: 20000 }
+  };
+  const INCIDENTS_PER_YEAR = 1.4;        // Sucuri/SiteLock benchmark
+  const DOWNTIME_DAYS = 4;               // sin recuperación especializada
+  const REPUTATION_FACTOR = 0.6;         // probabilidad de materialización
+  const TEAM_HOURS_PER_MONTH = 10;       // mantenimiento web manual
+  const TEAM_RATE = 25;                  // USD/hr conservador (BLS $47.92 privada)
+  const state = { plan:100, team:3, type:'ecommerce' };
+  const q = sel => document.querySelector('[data-roi="'+sel+'"]');
+  const fmt = n => {
+    if (n >= 1000) {
+      const k = n/1000;
+      return '$' + (k >= 100 ? Math.round(k) : k.toFixed(1).replace(/\.0$/,'')) + 'K';
+    }
+    return '$' + Math.round(n).toLocaleString();
+  };
+  const fmtFull = n => '$' + Math.round(n).toLocaleString();
+  function calc(){
+    const t = TYPES[state.type];
+    const annual = state.plan * 12;
+    const recovery = t.recovery * INCIDENTS_PER_YEAR;
+    const downtime = t.downtimeDay * DOWNTIME_DAYS * INCIDENTS_PER_YEAR;
+    const reputation = t.reputation * REPUTATION_FACTOR;
+    const fines = t.fines;
+    const teamSaved = state.team * TEAM_HOURS_PER_MONTH * TEAM_RATE * 12;
+    const benefit = recovery + downtime + reputation + fines + teamSaved;
+    const mul = benefit / annual;
+    const pct = (benefit - annual) / annual * 100;
+    q('plan-val').textContent = state.plan;
+    q('team-val').textContent = state.team;
+    q('o-invest').textContent = fmtFull(annual);
+    q('o-benefit').textContent = fmt(benefit);
+    q('o-mul').textContent = mul.toFixed(1) + '×';
+    q('o-pct').textContent = (pct >= 0 ? '+' : '') + Math.round(pct).toLocaleString() + '%';
+    q('b-rec').textContent = fmt(recovery);
+    q('b-down').textContent = fmt(downtime);
+    q('b-rep').textContent = fmt(reputation + fines);
+    q('b-team').textContent = fmt(teamSaved);
+  }
+  const planEl = document.querySelector('[data-roi="plan"]');
+  const teamEl = document.querySelector('[data-roi="team"]');
+  if (planEl) planEl.addEventListener('input', e => { state.plan = +e.target.value; calc(); });
+  if (teamEl) teamEl.addEventListener('input', e => { state.team = +e.target.value; calc(); });
+  document.querySelectorAll('[data-roi="pills"] .tp').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-roi="pills"] .tp').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.type = b.dataset.t;
+      calc();
+    });
+  });
+  calc();
+
+  /* ============ PRESENTER TOOLBAR ============ */
+  const tb       = document.getElementById('present-toolbar');
+  const fsBtn    = document.getElementById('pt-fs');
+  const fsLabel  = document.getElementById('pt-fs-label');
+  const skipBtn  = document.getElementById('pt-skip');
+  const skipLabel= document.getElementById('pt-skip-label');
+  const deck     = document.querySelector('deck-stage');
+
+  function isFs(){ return !!document.fullscreenElement; }
+  function syncFsBtn(){
+    if (isFs()) { fsBtn.classList.add('active'); fsLabel.textContent = 'Salir'; }
+    else { fsBtn.classList.remove('active'); fsLabel.textContent = 'Pantalla completa'; }
+  }
+  fsBtn.addEventListener('click', async () => {
+    try {
+      if (!isFs()) await (document.documentElement.requestFullscreen?.() || document.documentElement.webkitRequestFullscreen?.());
+      else await (document.exitFullscreen?.() || document.webkitExitFullscreen?.());
+    } catch(e) {}
+  });
+  document.addEventListener('fullscreenchange', syncFsBtn);
+  document.addEventListener('webkitfullscreenchange', syncFsBtn);
+
+  function currentSlide(){
+    if (!deck) return null;
+    // Try public API; otherwise reconstruct from data-screen-label via slidechange events.
+    if (typeof deck._index === 'number' && deck._slides) return deck._slides[deck._index] || null;
+    return null;
+  }
+  function syncSkipBtn(){
+    const s = currentSlide();
+    if (!s) { skipLabel.textContent = 'Ocultar slide'; skipBtn.classList.remove('active'); return; }
+    if (s.hasAttribute('data-deck-skip')) { skipLabel.textContent = 'Slide oculto · Mostrar'; skipBtn.classList.add('active'); }
+    else { skipLabel.textContent = 'Ocultar slide'; skipBtn.classList.remove('active'); }
+  }
+  skipBtn.addEventListener('click', () => {
+    const s = currentSlide();
+    if (!s) return;
+    if (s.hasAttribute('data-deck-skip')) s.removeAttribute('data-deck-skip');
+    else s.setAttribute('data-deck-skip', '');
+    syncSkipBtn();
+  });
+  if (deck) deck.addEventListener('slidechange', syncSkipBtn);
+  setTimeout(syncSkipBtn, 100);
+
+  // Keyboard shortcuts: F (fullscreen), H (hide/skip current)
+  document.addEventListener('keydown', (e) => {
+    if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === 'f' || e.key === 'F') { e.preventDefault(); fsBtn.click(); }
+    else if (e.key === 'h' || e.key === 'H') { e.preventDefault(); skipBtn.click(); }
+  });
+
+  // Idle fade
+  let idleT;
+  function bumpIdle(){
+    tb.classList.remove('idle');
+    clearTimeout(idleT);
+    idleT = setTimeout(() => tb.classList.add('idle'), 2800);
+  }
+  ['mousemove','keydown','touchstart'].forEach(ev => document.addEventListener(ev, bumpIdle, {passive:true}));
+  bumpIdle();
+  syncFsBtn();
+})();
+</script>
+
+</body>
+</html>
